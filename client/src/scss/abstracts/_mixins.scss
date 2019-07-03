@@ -1,0 +1,49 @@
+@mixin contentCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// MEDIA QUERY MANAGER
+/*
+0 - 420px:      Phone-small
+421 - 1022px:    Tablet portrait
+1023 - 1267px:   Tablet landscape
+1268 - 1450px:   Small Laptop
+1450px + :      Actual CSS
+
+$breakpoint arguement choices:
+- phone-small 0 - 375px
+- phone-big  376 - 425px
+- tablet- 426 - 768px
+- laptop-small 769 - 1024px
+- laptop-reg 1025 - 1267px
+- laptop-large 1268 - 1440px
+- actual-css 1440px +
+
+ORDER: Base + typography > general layout + grid > page layout > components
+
+1em = 16px
+*/
+
+@mixin respond($breakpoint) {
+  @if($breakpoint == phone-small) {
+    @media only screen and (max-width: 23.4375em) { @content};//375
+  }
+  @if($breakpoint == phone-big) {
+    @media only screen and (max-width: 26.5625em) { @content}; //425
+  }
+  @if($breakpoint == tablet) {
+    @media only screen and (max-width: 48em) { @content}; //768
+  }
+  @if($breakpoint == laptop-small) {
+    @media only screen and (max-width: 64em) { @content}; //1024
+  }
+  @if($breakpoint == laptop-reg) {
+    @media only screen and (max-width: 79.1875em) { @content}; //1267
+  }
+  @if($breakpoint == laptop-large) {
+    @media only screen and (max-width: 90em) { @content}; //1440
+  }
+}

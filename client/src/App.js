@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import './scss/app.scss';
+import api from './api';
+import {
+  REGISTER_FAMILY,
+  REGISTER_FAMILY_DONE
+} from './constants';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  // registerFam: (data) => {
+  //   api.Family.registerFam(data)
+  //   .then(res => {
+  //     console.log('res', res);
+  //   })
+  //   dispatch({type: REGISTER_FAMILY})
+  // }
+})
+
+export class App extends Component {
+  componentDidMount() {
+  //   console.log("testing redux",this.props);
+  //   this.props.registerFam({
+  //     name: 'martini claz',
+  //     email: 'kastille84@gmail.com',
+  //     password: '123tetstst'
+  //   });
+  // }
+
+  render() {
+    return (
+      <div className="App">
+  
+      </div>
+    );
+
+  }
 }
 
-export default App;
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
