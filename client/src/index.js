@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Router} from 'react-router-dom';
 import {createLogger}  from 'redux-logger';
+import createHistory from 'history/createBrowserHistory';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
@@ -12,12 +14,14 @@ import App from './App';
 
 //import './api/agent';
 
-
-export const store = createStore(rootReducer, applyMiddleware(thunk, createLogger()))
+ const middlewares = [thunk]
+ const store = createStore(rootReducer, applyMiddleware(...middlewares, createLogger()))
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router history={createHistory()} >
+      <App />    
+    </Router>
   </Provider>
   , document.getElementById('root'));
 

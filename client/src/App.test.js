@@ -1,9 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import App, {UnconnectedApp} from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+import {findByTestAttr} from './util/testUtils';
+import {shallow} from 'enzyme';
+
+
+
+test('renders loader when content is not loaded', () => {
+  // const wrapper = shallow(<UnconnectedApp />);
+  // wrapper.instance().setState({loading: false, loaded: true});
+  // const loader = findByTestAttr(wrapper,'loader');
+  // console.log('loader', loader)
+  // expect(loader.length).toBe(1);
+})

@@ -1,0 +1,25 @@
+.btn {
+  min-width: 115px;
+  height: 30px;
+  font-size: $form-input;
+  
+}
+
+.btn-primary {
+  background-color: $primary-blue;
+  color: $color-white;
+}
+.btn-primary-outline {
+  border: 1px solid $primary-blue;
+  color: $primary-blue;
+}
+
+.btn-success {
+  background-color: $success;
+  color: $color-white;
+}
+
+.btn-secondary-left {
+  color: $primary-blue;
+  text-align: left;
+}

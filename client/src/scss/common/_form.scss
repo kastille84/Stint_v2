@@ -1,0 +1,50 @@
+.form-container {
+
+
+  .form-title {
+    text-align: center;
+    font-size: $form-title;
+    margin-bottom: 25px;
+  }
+  .form-wrapper {
+    border: 1px solid $primary-blue;
+    padding: 20px;
+    min-width: 322px;
+    width: 50%;
+    margin: auto;
+
+    .alert {
+      font-size: $form-input;
+    }
+
+    .form__form-group {
+      color: $primary-text;
+      width: 60%;
+      margin: auto;
+      margin-bottom: 30px;
+
+      &-label {
+        font-size: $form-label;
+      }
+      &-field {
+        min-width: 125px;
+
+        input,
+        textarea {
+          width: 100%;
+          font-size: $form-input;
+          border: 1px solid #c4c4c4;
+          padding-left: 5px;
+        }
+      }
+    }
+
+    .form__button-toolbar {
+      width: 60%;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+    }
+
+  }
+}
