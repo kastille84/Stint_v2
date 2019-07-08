@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mongoose = require('mongoose');
+const {check, validationResult} = require('express-validator/check')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -22,21 +23,46 @@ mongoose.connect("mongodb://"+dbUser+":"+dbPass+"@ds345597.mlab.com:45597/stint_
   );
 mongoose.Promise = global.Promise;
 
+//validation helper function
+const passInputValidation = (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(400).json({error: "Invalid inputs. Try again"});
+  }  
+}
+
 // ONBOARDING
-router.post('/register-family', (req, res) => {
+router.post('/register-family',[
+  check('family_nickname').escape().trim().exists(),
+  check('family_email').isEmail()
+      .matches(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)
+      .escape().trim(),
+  check('family_password').escape().trim().exists()
+], (req, res) => {
+
+  passInputValidation(req, res);
+  //at this point it passed validation
+
+  //hash password
+  const salt = bcrypt.genSaltSync(10);;
+  let hash = bcrypt.hashSync(req.body.family_password.toLowerCase(), salt)
+  // create a record
   const family = new Family({
-    email: req.body.email,
-    name: req.body.name,
-    password: req.body.password
+    family_email: req.body.family_email,
+    family_nickname: req.body.family_nicknamez,
+    family_password: hash
   });
   family.save((err, result) => {
     if(err) {
-      return res.status(500).json({errors: err})
+      return res.status(500).json({error: err._message})
     }
     //at this point save was success
+    //create family token
+    const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
     return res.status(200).json({
-      family: result
-    })
+      family: result,
+      token: token
+    });
   })
 })
 

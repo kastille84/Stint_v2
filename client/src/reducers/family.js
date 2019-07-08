@@ -5,7 +5,7 @@ import {
 
 const initialState = {
   isFamAuth: false,
-  famData: [],
+  familyData: null,
   parents: [],
   children: [],
   fetching: false,
@@ -20,6 +20,13 @@ const family = (state=initialState, action) => {
         ...state,
         fetching: true
       };
+    case REGISTER_FAMILY_DONE:
+      return {
+        ...state,
+        fetching: false,
+        familyData: action.payload,
+        apiError: action.error? action.error : null
+      }
     default:
       return state;
   }

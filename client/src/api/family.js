@@ -4,9 +4,9 @@ export default {
   registerFam: (data) => {
     return new global.Promise((resolve, reject) => {
       let body = {
-        name: data.name,
-        email: data.email,
-        password: data.password
+        family_nickname: data.family_nickname,
+        family_email: data.family_email,
+        family_password: data.family_password
       };
       agent.axios.post("/register-family", body)
       .then(res => {

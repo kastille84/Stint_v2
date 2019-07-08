@@ -2,6 +2,29 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
+import api from '../api';
+import {
+  REGISTER_FAMILY,
+  REGISTER_FAMILY_DONE
+} from '../constants';
+
+const mapStateToProps = (state) => ({
+  registerForm: state.form.register,
+  family: state.family
+});
+const mapDispatchToProps = (dispatch) => ({
+  registerFamily: (data) => {
+    dispatch({type: REGISTER_FAMILY});
+    api.Family.registerFam(data)
+      .then(payload => {
+        dispatch({type: REGISTER_FAMILY_DONE, payload: payload});
+        localStorage.setItem('family_jwt', payload.token);
+        //redirect to SelectUser page
+        this.props.history.push('/select-user');
+      })
+      .catch(err => dispatch({type: REGISTER_FAMILY_DONE, error: err.response.data.error}))
+  }
+});
 
 export class UnconnectedRegister extends Component {
   state = {
@@ -54,7 +77,24 @@ export class UnconnectedRegister extends Component {
     }
 
     //at this point, validation passed. Make API call
+    this.props.registerFamily(values)
+  }
 
+  renderAlert = (type) => {
+    if (this.state.errorMessage) {
+      return (
+        <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
+          {this.state.errorMessage}
+        </Alert>
+      )
+    }
+    if(this.props.family.apiError) {
+      return (
+        <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
+        {this.props.family.apiError}
+      </Alert>
+      )
+    }
   }
 
   render() {
@@ -65,9 +105,7 @@ export class UnconnectedRegister extends Component {
         <section className="form-container">
           <h2 className="form-title">Register</h2>
           <div className="form-wrapper">
-            <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
-              {this.state.errorMessage}
-            </Alert>
+            {this.renderAlert('danger')}
             <Form className="regsiter-form" onSubmit={handleSubmit(this.handleSubmit)}>
               <section className="form__form-group">
                 <label className="form__form-group-label">Family Email</label>
@@ -94,7 +132,7 @@ export class UnconnectedRegister extends Component {
                 </div>
               </section>
               <section className="form__form-group">
-                <label className="form__form-group-label">Family Password</label>
+                <label className="form__form-group-label d-flex justify-content-between"><span>Family Password</span><span onClick={()=>this.toggleShowPass()}>{this.state.showPass?'hide':'show'}</span></label>
                 <div className="form__form-group-field">
                   <Field  
                     name="family_password"
@@ -117,8 +155,5 @@ export class UnconnectedRegister extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  registerForm: state.form.register
-});
 
-export default connect(mapStateToProps)(reduxForm({form: 'register'})(UnconnectedRegister));
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'register'})(UnconnectedRegister));
