@@ -13,3 +13,10 @@
 @import "./common/_form.scss";
 @import "./common/_button.scss";
 @import "./common/_page.scss";
+
+//components
+@import "./components/_navigation.scss";
+
+//page
+@import "./pages/_register.scss";
+@import "./pages/_login.scss";

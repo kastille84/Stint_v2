@@ -1,0 +1,17 @@
+.navbar {
+  height: 60px;
+  background-color: $primary-blue; 
+  
+  &-brand {
+    font-size: $page-md-text;
+    color: $color-white !important;
+  }
+
+  &-collapse {
+    font-size: $page-md-text;
+  }
+
+  .nav-item {
+    font-size: $page-md-text;
+  }
+}

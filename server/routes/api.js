@@ -32,6 +32,7 @@ const passInputValidation = (req, res) => {
 }
 
 // ONBOARDING
+  //REGISTER FAM
 router.post('/register-family',[
   check('family_nickname').escape().trim().exists(),
   check('family_email').isEmail()
@@ -64,6 +65,31 @@ router.post('/register-family',[
       token: token
     });
   })
+})
+  //LOGIN FAM
+router.post('/login-family',[
+  check('family_email').isEmail()
+      .matches(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)
+      .escape().trim(),
+  check('family_password').escape().trim().exists()
+], (req, res) => {
+
+  passInputValidation(req, res);
+  //at this point it passed validation
+
+  //check email, password credentials
+  Family.find({email: req.body.email.toLowerCase()})
+    .populate("parents")
+    .populate("children")
+    .exec()
+    .then(family => {
+
+    })
+    .catch(error => {
+      
+    })
+
+
 })
 
 

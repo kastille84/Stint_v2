@@ -17,11 +17,7 @@ const schema = new Schema({
     type: String,
     required: true
   },
-  family_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Family'
-  },
-  children_id: [{
+  children: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Child'
   }]

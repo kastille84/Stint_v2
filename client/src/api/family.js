@@ -15,5 +15,18 @@ export default {
       .catch(err => reject(err));
     })
   },
+  loginFam: (data) => {
+    return new global.Promise((resolve, reject) => {
+      let body = {
+        family_email: data.family_email,
+        family_password: data.family_password
+      };
+      agent.axios.post("/login-family", body)
+      .then(res => {
+        return resolve(res.data)
+      })
+      .catch(err => reject(err));
+    })
+  },
 
 }

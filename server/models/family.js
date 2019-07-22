@@ -16,7 +16,19 @@ const schema = new Schema({
   family_nickname: {
     type: String,
     required: true
-  }
+  },
+  parents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Parent'
+    }
+  ],
+  children: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Child'
+    }
+  ]
 
 })
 

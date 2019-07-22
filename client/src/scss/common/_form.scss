@@ -3,7 +3,7 @@
 
   .form-title {
     text-align: center;
-    font-size: $form-title;
+    font-size: $page-subtitle;
     margin-bottom: 25px;
   }
   .form-wrapper {
@@ -14,7 +14,7 @@
     margin: auto;
 
     .alert {
-      font-size: $form-input;
+      font-size: $page-sm-text;
     }
 
     .form__form-group {
@@ -24,7 +24,7 @@
       margin-bottom: 30px;
 
       &-label {
-        font-size: $form-label;
+        font-size: $page-lg-text;
       }
       &-field {
         min-width: 125px;
@@ -32,7 +32,7 @@
         input,
         textarea {
           width: 100%;
-          font-size: $form-input;
+          font-size: $page-sm-text;
           border: 1px solid #c4c4c4;
           padding-left: 5px;
         }

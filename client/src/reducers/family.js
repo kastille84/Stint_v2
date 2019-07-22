@@ -1,6 +1,9 @@
 import {
   REGISTER_FAMILY,
-  REGISTER_FAMILY_DONE
+  REGISTER_FAMILY_DONE,
+  LOGIN_FAMILY,
+  LOGIN_FAMILY_DONE
+
 } from '../constants';
 
 const initialState = {
@@ -21,6 +24,18 @@ const family = (state=initialState, action) => {
         fetching: true
       };
     case REGISTER_FAMILY_DONE:
+      return {
+        ...state,
+        fetching: false,
+        familyData: action.payload,
+        apiError: action.error? action.error : null
+      }
+    case LOGIN_FAMILY:
+      return {
+        ...state,
+        fetching: true
+      };
+    case LOGIN_FAMILY_DONE:
       return {
         ...state,
         fetching: false,

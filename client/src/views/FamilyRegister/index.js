@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
-import api from '../api';
+import api from '../../api';
 import {
   REGISTER_FAMILY,
   REGISTER_FAMILY_DONE
-} from '../constants';
+} from '../../constants';
 
 const mapStateToProps = (state) => ({
   registerForm: state.form.register,
@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-export class UnconnectedRegister extends Component {
+export class UnconnectedFamilyRegister extends Component {
   state = {
     showPass: false,
     visible: false,
@@ -100,12 +100,11 @@ export class UnconnectedRegister extends Component {
   render() {
     const {handleSubmit } = this.props;
     return (
-      <div data-test="register" className="register">
-        <h1 className="page-title">Family</h1>
+      <div data-test="family-register" className="family-register">
         <section className="form-container">
-          <h2 className="form-title">Register</h2>
-          <div className="form-wrapper">
-            {this.renderAlert('danger')}
+          <h2 className="form-title">Family Register</h2>
+          <div className="form-wrapper register-form-wrapper">
+            {this.props.family && this.renderAlert('danger')}
             <Form className="regsiter-form" onSubmit={handleSubmit(this.handleSubmit)}>
               <section className="form__form-group">
                 <label className="form__form-group-label">Family Email</label>
@@ -145,7 +144,7 @@ export class UnconnectedRegister extends Component {
               </section>
               <section className="form__button-toolbar">
                 <button className="btn btn-secondary-left">Login</button>
-                <button className="btn btn-success">Register</button>
+                <button className="btn btn-success" data-test="register-button">Register</button>
               </section>
             </Form>
           </div>
@@ -156,4 +155,4 @@ export class UnconnectedRegister extends Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'register'})(UnconnectedRegister));
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'register'})(UnconnectedFamilyRegister));

@@ -3,11 +3,7 @@ import {connect} from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Router from './Router';
 import './scss/app.scss';
-import api from './api';
-import {
-  REGISTER_FAMILY,
-  REGISTER_FAMILY_DONE
-} from './constants';
+import Nav from './components/Navigation';
 
 const mapStateToProps = (state) => ({
   user: state.user
@@ -39,19 +35,21 @@ export class UnconnectedApp extends Component {
   //     email: 'kastille84@gmail.com',
   //     password: '123tetstst'
   //   });
+
+  //#TODO - if jwt's are set, decide on redirect
+  // if(localStorage.getItem('family_jwt'))
   }
 
   render() {
     const loaded = this.state.loaded;
     return (
       <div className="App">
-        {/*Nav goes here */}
+        <Nav/>
         <div className="container">
           {!loaded ? (
             <Loader data-test="loader" type="Grid" color="#2e40dc" height={80} width={80} />
           ): null}
-          <Router />
-        
+          <Router />        
         </div>
       </div>
     );

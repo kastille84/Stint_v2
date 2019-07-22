@@ -2,6 +2,8 @@
 //User
 export const REGISTER_FAMILY = "REGISTER_FAMILY";
 export const REGISTER_FAMILY_DONE = "REGISTER_FAMILY_DONE";
+export const LOGIN_FAMILY = "LOGIN_FAMILY";
+export const LOGIN_FAMILY_DONE = "LOGIN_FAMILY_DONE";
 
 
 //Schedule
