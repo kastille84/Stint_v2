@@ -4,6 +4,9 @@ export const REGISTER_FAMILY = "REGISTER_FAMILY";
 export const REGISTER_FAMILY_DONE = "REGISTER_FAMILY_DONE";
 export const LOGIN_FAMILY = "LOGIN_FAMILY";
 export const LOGIN_FAMILY_DONE = "LOGIN_FAMILY_DONE";
+export const SET_IS_FAM_AUTH = "SET_IS_FAM_AUTH";
+export const SET_IS_PARENT_AUTH = "SET_IS_PARENT_AUTH";
+export const SET_IS_CHILD_AUTH = "SET_IS_CHILD_AUTH";
 
 
 //Schedule

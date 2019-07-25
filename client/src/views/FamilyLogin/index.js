@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
 import api from '../../api';
@@ -13,16 +14,19 @@ const mapStateToProps = (state) => ({
   family: state.family
 });
 const mapDispatchToProps = (dispatch) => ({
-  loginFamily: (data) => {
+  loginFamily: (data, cbPush, cbVisible) => {
     dispatch({type: LOGIN_FAMILY});
     api.Family.loginFam(data)
       .then(payload => {
         dispatch({type: LOGIN_FAMILY_DONE, payload: payload});
         localStorage.setItem('family_jwt', payload.token);
         //redirect to SelectUser page
-        this.props.history.push('/select-user');
+        cbPush('/which-user');
       })
-      .catch(err => dispatch({type: LOGIN_FAMILY_DONE, error: err.response.data.error}))
+      .catch(err => {
+        dispatch({type: LOGIN_FAMILY_DONE, error: err})
+        cbVisible(true);
+      })
   }
 });
 
@@ -77,7 +81,15 @@ export class FamilyLogin extends Component {
     }
 
     //at this point, validation passed. Make API call
-    this.props.loginFamily(values)
+    this.props.loginFamily(
+      values, 
+      (url) => {
+        this.props.history.push(url)
+      },
+      (visibleVal) => {
+        this.setState({visible:visibleVal})
+      },
+    )
   }
 
   renderAlert = (type) => {
@@ -91,7 +103,7 @@ export class FamilyLogin extends Component {
     if(this.props.family.apiError) {
       return (
         <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
-        {this.props.family.apiError}
+          Error: Please Try again later.
       </Alert>
       )
     }
@@ -131,7 +143,7 @@ export class FamilyLogin extends Component {
                 </div>
               </section>
               <section className="form__button-toolbar">
-                <button className="btn btn-secondary-left">Register</button>
+                <Link className="btn btn-secondary-left" to="/family-register">Register</Link>
                 <button className="btn btn-success" >Login</button>
               </section>
             </Form>

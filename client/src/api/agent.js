@@ -1,5 +1,5 @@
 import axios from 'axios';
-//import {store} from '../index.js';
+import {store} from '../index.js';
 
 if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = ""
@@ -7,19 +7,19 @@ if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = "http://localhost:5000/api";
 }
 
-const setSession = security_token => {
-  window.localStorage.setItem("jwt", security_token);
+const setSession = (jwt_name,security_token) => {
+  window.localStorage.setItem(jwt_name, security_token);
   axios.defaults.headers.common["Authorization"] = `Bearer ${security_token}`;
 }
 
-const getSession = () => {
-  let security_token = window.localStorage.getItem("jwt");
+const getSession = (jwt_name) => {
+  let security_token = window.localStorage.getItem(jwt_name);
   axios.defaults.headers.common["Authorization"] = `Bearer ${security_token}`;
   return security_token;
 }
 
-const clearSession = () => {
-  window.localStorage.removeItem("jwt");
+const clearSession = (jwt_name) => {
+  window.localStorage.removeItem(jwt_name);
   axios.defaults.headers.common["Authorization"] = "";
 }
 

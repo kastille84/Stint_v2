@@ -32,4 +32,11 @@ const schema = new Schema({
 
 })
 
+// schema.post('save', function(error, doc, next) {
+//   if(error.name === "MongoError" && error.code === 11000) {
+//     next(new Error('This is a duplicate record. Try another'))
+//   } else {
+//     next(error);
+//   }
+// });
 module.exports = mongoose.model("Family", schema);

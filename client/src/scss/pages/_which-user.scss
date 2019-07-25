@@ -1,0 +1,86 @@
+.which-user {
+  
+  .which-user-container {
+    display: flex;
+    justify-content: space-evenly;
+
+    .parent-side{
+      flex: 1;
+    }
+    
+    .children-side {
+      flex: 1;
+    }
+
+    //styling for adding a person
+    .add-person {
+      position: relative;
+      width: 250px;
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      border: 1px solid $primary-blue;
+      border-radius: 10px;
+      text-align: center;
+      margin: auto;
+      background: $primary-blue;
+      color: $color-white;
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+
+      &__plus {
+        font-size: $page-xl-text;
+      }
+      &__close {
+        position:absolute;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        cursor: pointer;
+      }
+
+      .front {
+        cursor: pointer;
+      }
+      .back {
+        padding-left:10px;
+        padding-right: 10px;
+      }
+
+      .which-user-form {
+        width: 80%;
+        margin: auto;
+
+        .form__form-group {
+          text-align: left;
+          input {
+            width:100%;
+            padding-left: 5px;
+            margin-bottom: 10px;
+          }
+          input::placeholder {
+            color: #999;;
+          }
+        }
+      }
+    }
+
+    .add-person:hover {  
+      // background-color: $color-light-beige;
+      // color: $primary-blue;
+    }
+
+    .add-person--disabled {
+      user-select: none;
+      background: #ccc;
+      color: #999;
+      cursor:not-allowed;
+      border: 1px solid #ccc;
+    }
+    .add-person--disabled:hover {
+      background-color: #ccc;
+      color: #999;
+    }
+  }
+
+}

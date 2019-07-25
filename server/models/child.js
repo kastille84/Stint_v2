@@ -12,12 +12,12 @@ const schema = new Schema({
   },
   family_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Family'
+    required: true
   },
-  parents_id: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Parent'
-  }]
+  // parents_id: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Parent'
+  // }]
 
 })
 

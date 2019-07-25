@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
 import api from '../../api';
@@ -13,16 +14,20 @@ const mapStateToProps = (state) => ({
   family: state.family
 });
 const mapDispatchToProps = (dispatch) => ({
-  registerFamily: (data) => {
+  registerFamily: (data, cbPush, cbVisible) => {
     dispatch({type: REGISTER_FAMILY});
     api.Family.registerFam(data)
       .then(payload => {
         dispatch({type: REGISTER_FAMILY_DONE, payload: payload});
-        localStorage.setItem('family_jwt', payload.token);
+        //localStorage.setItem('family_jwt', payload.token);
+        api.agent.setSession('family_jwt',payload.token );
         //redirect to SelectUser page
-        this.props.history.push('/select-user');
+        cbPush('/which-user');
       })
-      .catch(err => dispatch({type: REGISTER_FAMILY_DONE, error: err.response.data.error}))
+      .catch(err => {
+        dispatch({type: REGISTER_FAMILY_DONE, error: err});
+        cbVisible(true)
+      })
   }
 });
 
@@ -77,7 +82,15 @@ export class UnconnectedFamilyRegister extends Component {
     }
 
     //at this point, validation passed. Make API call
-    this.props.registerFamily(values)
+    this.props.registerFamily(
+      values, 
+      (url) => {
+        this.props.history.push(url);
+      },
+      (visibleVal) => {
+        this.setState({visible: visibleVal})
+      },
+    )
   }
 
   renderAlert = (type) => {
@@ -91,7 +104,7 @@ export class UnconnectedFamilyRegister extends Component {
     if(this.props.family.apiError) {
       return (
         <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
-        {this.props.family.apiError}
+          Error: Please Try again later.
       </Alert>
       )
     }
@@ -104,8 +117,8 @@ export class UnconnectedFamilyRegister extends Component {
         <section className="form-container">
           <h2 className="form-title">Family Register</h2>
           <div className="form-wrapper register-form-wrapper">
-            {this.props.family && this.renderAlert('danger')}
-            <Form className="regsiter-form" onSubmit={handleSubmit(this.handleSubmit)}>
+          {this.props.family && this.renderAlert('danger')}
+          <Form className="regsiter-form" onSubmit={handleSubmit(this.handleSubmit)}>
               <section className="form__form-group">
                 <label className="form__form-group-label">Family Email</label>
                 <div className="form__form-group-field">
@@ -143,8 +156,8 @@ export class UnconnectedFamilyRegister extends Component {
                 </div>
               </section>
               <section className="form__button-toolbar">
-                <button className="btn btn-secondary-left">Login</button>
-                <button className="btn btn-success" data-test="register-button">Register</button>
+                <Link className="btn btn-secondary-left" to="/family-login">Login</Link>
+                <button className="btn btn-success" type="submit">Register</button>
               </section>
             </Form>
           </div>

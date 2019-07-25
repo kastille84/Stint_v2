@@ -15,7 +15,7 @@ import App from './App';
 //import './api/agent';
 
  const middlewares = [thunk]
- const store = createStore(rootReducer, applyMiddleware(...middlewares, createLogger()))
+ export const store = createStore(rootReducer, applyMiddleware(...middlewares, createLogger()))
 
 ReactDOM.render(
   <Provider store={store}>
