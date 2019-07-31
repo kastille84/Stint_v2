@@ -76,6 +76,14 @@
       color: #999;
       cursor:not-allowed;
       border: 1px solid #ccc;
+
+      .front,
+      .back {
+        user-select: none;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
     }
     .add-person--disabled:hover {
       background-color: #ccc;

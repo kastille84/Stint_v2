@@ -31,6 +31,17 @@ const passInputValidation = (req, res) => {
   }  
 }
 
+//checkJWTtoken middleware
+const checkJWT = (req, res, next) => {
+  let token = jwt.verify(req.headers.authorization, tks);
+  console.log('verified_token', token)
+  if (token) {
+    next();
+  } else {
+    return res.status(500).json({message: "Invalid/missing token. Please login"})
+  }
+}
+
 // ONBOARDING
   //REGISTER FAM
 router.post('/register-family',[
@@ -75,7 +86,6 @@ router.post('/register-person', [
 ], (req, res) => {
   passInputValidation(req, res);
   //at this point, it passed validation
-
   if(req.body.person_type === 'parent') {
     //hash pin
     const salt = bcrypt.genSaltSync(10);
@@ -98,9 +108,8 @@ router.post('/register-person', [
         token: token
       });
     });
-  }
-
-  if(req.body.person_type === 'child') {
+    //#TODO: SAVE PARENT ID IN FAMILY
+  }else if(req.body.person_type === 'child') {
     //hash pin
     const salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(req.body.pin, salt);
@@ -122,6 +131,7 @@ router.post('/register-person', [
         token: token
       });
     });
+    //#TODO: SAVE CHILD ID IN PARENT
   } 
   else {
     return res.status(500).json({error: "person type is needed"})
@@ -172,5 +182,28 @@ router.post('/login-family',[
     });
 });
 
+//PROTECTED ROUTES (go through JWTCheck Middleware)
+//router.use(checkJWT)
+
+router.get("/family-data", (req, res) => {
+  //#TODO -set up route
+  let reqToken= req.headers.authorization;
+  let decodedJWT=jwt.verify(reqToken, tks);
+  console.log('decoded', decodedJWT);
+  Family.findOne({_id: decodedJWT.id})
+    .populate('parent')
+    .populate('child')
+    .exec()
+    .then(doc => {
+      console.log('doc', doc)
+      return res.status(200).json({
+        family: doc
+      });
+    })
+    .catch(err => {
+      return res.status(500).json({message:"Could not retrieve family data"});
+    });
+
+})
 
 module.exports = router;

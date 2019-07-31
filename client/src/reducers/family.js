@@ -5,7 +5,11 @@ import {
   LOGIN_FAMILY_DONE,
   SET_IS_FAM_AUTH,
   SET_IS_PARENT_AUTH,
-  SET_IS_CHILD_AUTH
+  SET_IS_CHILD_AUTH,
+  REGISTER_PERSON,
+  REGISTER_PERSON_DONE,
+  SET_FAMILY_DATA,
+  SET_FAMILY_DATA_DONE
 
 } from '../constants';
 
@@ -36,6 +40,18 @@ const family = (state=initialState, action) => {
         apiError: action.error? action.error : null,
         isFamAuth: true
       }
+    case REGISTER_PERSON:
+      return {
+        ...state,
+        fetching: true
+      };
+    case REGISTER_PERSON_DONE:
+      return {
+        ...state,
+        fetching: false,
+        familyData: action.payload? addPersonToFamilyData({familyData:state.familyData},action.payload) : null,
+        apiError: action.error? action.error : null
+      }
     case LOGIN_FAMILY:
       return {
         ...state,
@@ -49,6 +65,18 @@ const family = (state=initialState, action) => {
         apiError: action.error? action.error : null,
         isFamAuth: true
       }
+    case SET_FAMILY_DATA:
+      return {
+        ...state,
+        fetching: true
+      };
+    case SET_FAMILY_DATA_DONE:
+      return {
+        ...state,
+        fetching: false,
+        familyData: action.payload.family,
+        apiError: action.error? action.error : null,
+      }
     case SET_IS_FAM_AUTH:
       return {
         ...state,
@@ -61,3 +89,19 @@ const family = (state=initialState, action) => {
 }
 
 export default family;
+
+const addPersonToFamilyData = (family, payload) => {
+  console.log('familyData', family)
+  console.log('person', payload)
+
+  if(payload.parent) {
+    family.familyData.parents.push(payload.parent)
+  }
+
+  if (payload.child) {
+    family.familyData.children.push(payload.child)
+  }
+
+  return family.familyData;
+
+}

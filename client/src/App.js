@@ -80,14 +80,7 @@ export class UnconnectedApp extends Component {
               width={80}
             />
           ) : null}
-          <Router
-            showWhichUserRoutes={(this.props.family||{}).isFamAuth}
-            showProtectedRoutes={
-              ((this.props.family||{}).IsParentAuth || (this.props.family||{}).isChildAuth)
-                ? true
-                : false
-            }
-          />
+          <Router />
         </div>
       </div>
     );

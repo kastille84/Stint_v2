@@ -8,6 +8,21 @@ import WhichUser from "./views/WhichUser";
 
 
 class Router extends Component {
+  state = {
+    famAuth: false,
+    personAuth: false
+  }
+
+  componentDidMount() {
+    if (this._isFamJWTset) {
+      this.setState({famAuth: true})
+    }
+    if (this._isParentChildJWTset()) {
+      this.setState({personAuth: true})
+    }
+
+  }
+
   protectedRoutes = () => {
     return (
       <Switch>
@@ -37,10 +52,10 @@ class Router extends Component {
         <Route exact path="/" component={FamilyRegister} />
         <Route exact path="/family-register" component={FamilyRegister} />
         <Route exact path="/family-login" component={FamilyLogin} />
-        { this._isFamJWTset() && (
+        { this.state.famAuth && (
           <Route exact path="/which-user" component={WhichUser} />
         )}
-        {this._isParentChildJWTset() ? this.protectedRoutes() : null}
+        {this.state.personAuth ? this.protectedRoutes() : null}
     
         <Route render={() =>{
           return <Redirect to={this._determineRedirectRoute()} />

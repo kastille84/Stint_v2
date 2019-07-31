@@ -19,7 +19,8 @@ const mapDispatchToProps = (dispatch) => ({
     api.Family.loginFam(data)
       .then(payload => {
         dispatch({type: LOGIN_FAMILY_DONE, payload: payload});
-        localStorage.setItem('family_jwt', payload.token);
+        //localStorage.setItem('family_jwt', payload.token);
+        api.agent.setSession('family_jwt',payload.token );
         //redirect to SelectUser page
         cbPush('/which-user');
       })

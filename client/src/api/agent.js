@@ -9,12 +9,12 @@ if (process.env.NODE_ENV === 'production') {
 
 const setSession = (jwt_name,security_token) => {
   window.localStorage.setItem(jwt_name, security_token);
-  axios.defaults.headers.common["Authorization"] = `Bearer ${security_token}`;
+  axios.defaults.headers.common["Authorization"] = `${security_token}`;
 }
 
-const getSession = (jwt_name) => {
-  let security_token = window.localStorage.getItem(jwt_name);
-  axios.defaults.headers.common["Authorization"] = `Bearer ${security_token}`;
+const getSession = () => {
+  let security_token = window.localStorage.getItem('family_jwt');
+  axios.defaults.headers.common["Authorization"] = `${security_token}`;
   return security_token;
 }
 
