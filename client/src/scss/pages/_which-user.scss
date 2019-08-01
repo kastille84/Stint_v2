@@ -52,11 +52,12 @@
         margin: auto;
 
         .form__form-group {
-          text-align: left;
+          
           input {
             width:100%;
             padding-left: 5px;
             margin-bottom: 10px;
+            text-align: center;
           }
           input::placeholder {
             color: #999;;
@@ -64,12 +65,6 @@
         }
       }
     }
-
-    .add-person:hover {  
-      // background-color: $color-light-beige;
-      // color: $primary-blue;
-    }
-
     .add-person--disabled {
       user-select: none;
       background: #ccc;
@@ -83,9 +78,86 @@
         pointer-events: none;
         cursor: not-allowed;
       }
-
     }
     .add-person--disabled:hover {
+      background-color: #ccc;
+      color: #999;
+    }
+
+    //styling for listing person
+    .parent-list {
+       display:flex;
+       flex-direction: column;
+    }
+    .person-box {
+      position: relative;
+      width: 250px;
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      border: 1px solid $primary-blue;
+      border-radius: 10px;
+      text-align: center;
+      margin: auto;
+      margin-bottom: 20px;
+      background: $color-white;
+      color: $primary-blue;
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+
+      &__plus {
+        font-size: $page-subtitle;
+      }
+      &__close {
+        position:absolute;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        cursor: pointer;
+      }
+
+      .front {
+        cursor: pointer;
+      }
+      .back {
+        padding-left:10px;
+        padding-right: 10px;
+      }
+
+      .which-user-form {
+        width: 80%;
+        margin: auto;
+
+        .form__form-group {
+          input {
+            width:100%;
+            padding-left: 5px;
+            margin-bottom: 10px;
+            border: 1px solid $primary-blue;
+            color: $primary-blue;
+            text-align:center;
+          }
+          input::placeholder {
+            color: #999;
+          }
+        }
+      }
+    }
+    .person-box--disabled {
+      user-select: none;
+      background: #ccc;
+      color: #999;
+      cursor:not-allowed;
+      border: 1px solid #ccc;
+
+      .front,
+      .back {
+        user-select: none;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+    }
+    .person-box--disabled:hover {
       background-color: #ccc;
       color: #999;
     }

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import AddParent from './components/AddParent';
-import AddChild from './components/AddChild';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
 import { 
@@ -9,8 +7,11 @@ import {
   REGISTER_PERSON_DONE,
   SET_FAMILY_DATA,
   SET_FAMILY_DATA_DONE
- } from "../../constants";
+} from "../../constants";
 import api from "../../api";
+import AddParent from './components/AddParent';
+import AddChild from './components/AddChild';
+import PersonBox from './components/PersonBox';
 
 const mapStateToProps = state => ({
   familyData: state.family.familyData,
@@ -87,6 +88,10 @@ class WhichUser extends Component {
     )
   }
 
+  handlePersonLogin = (values)=> {
+
+  }
+
   renderAlert = (type) => {
     if (this.state.errorMessage) {
       return (
@@ -110,6 +115,35 @@ class WhichUser extends Component {
 
   _setPersonType = (type) => {
     this.setState({personType: type})
+  }
+
+  _renderPersonBox = (type) => {
+    return this.props.familyData[type].map(p => {
+      return (
+        <PersonBox person={p}>
+          <Form className="which-user-form" onSubmit={this.props.handleSubmit(this.handlePersonLogin)}>
+            <section className="form__form-group">
+              <label className="form__form-group-label">Pin</label>
+              <div className="form__form-group-field">
+                <Field  
+                  name="pin"
+                  component="input"
+                  type="text"
+                  placeholder="Unique pin"
+                  required
+                  autoFocus
+                />
+              </div>
+            </section>
+            <button 
+              className="btn btn-success mt5" 
+              type="submit" 
+              onClick={()=>this._setPersonType('child')}
+            >Login</button>
+          </Form>          
+        </PersonBox>
+      )
+    })
   }
 
   render() {
@@ -154,6 +188,12 @@ class WhichUser extends Component {
               >Add</button>
               </Form>
             </AddParent>
+            {/* List of Parents*/}
+            <div className="parent-list mt20">
+              {((this.props.familyData||{}).parents||[]).length >0 &&
+                this._renderPersonBox('parents')
+              }            
+            </div>
           </article>
           {/* CHILDREN */}
           <article className="children-side">

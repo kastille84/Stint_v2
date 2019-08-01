@@ -34,7 +34,6 @@ const passInputValidation = (req, res) => {
 //checkJWTtoken middleware
 const checkJWT = (req, res, next) => {
   let token = jwt.verify(req.headers.authorization, tks);
-  console.log('verified_token', token)
   if (token) {
     next();
   } else {
@@ -86,6 +85,7 @@ router.post('/register-person', [
 ], (req, res) => {
   passInputValidation(req, res);
   //at this point, it passed validation
+  let personId;
   if(req.body.person_type === 'parent') {
     //hash pin
     const salt = bcrypt.genSaltSync(10);
@@ -98,11 +98,22 @@ router.post('/register-person', [
     });
     parent.save((err, result) => {
       if(err) {
+        console.log('errorFam', err)
         return res.status(500).json({error: err})
       }
        //at this point save was success
       //create family token
       const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
+      //set personId for storing in Family schema
+      personId=result._id;
+      Family.findOne({_id: req.body.family_id}).exec()
+        .then(fam=>{
+          fam.parents = [...fam.parents, personId];
+          fam.save();
+        })
+        .catch();
+      
+      //send response
       return res.status(200).json({
         parent: result,
         token: token
@@ -126,6 +137,14 @@ router.post('/register-person', [
        //at this point save was success
       //create family token
       const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
+        //set personId for storing in Family schema
+        personId=result._id;
+        Family.findOne({_id: req.body.family_id}).exec()
+        .then(fam=>{
+          fam.children = [...fam.children, personId];
+          fam.save();
+        })
+        .catch();
       return res.status(200).json({
         child: result,
         token: token
@@ -189,13 +208,11 @@ router.get("/family-data", (req, res) => {
   //#TODO -set up route
   let reqToken= req.headers.authorization;
   let decodedJWT=jwt.verify(reqToken, tks);
-  console.log('decoded', decodedJWT);
   Family.findOne({_id: decodedJWT.id})
-    .populate('parent')
-    .populate('child')
+    .populate('parents')
+    .populate('children')
     .exec()
     .then(doc => {
-      console.log('doc', doc)
       return res.status(200).json({
         family: doc
       });
