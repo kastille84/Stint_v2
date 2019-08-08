@@ -9,8 +9,8 @@ import {
   REGISTER_PERSON,
   REGISTER_PERSON_DONE,
   SET_FAMILY_DATA,
-  SET_FAMILY_DATA_DONE
-
+  SET_FAMILY_DATA_DONE,
+  SET_SELECTED_CHILD
 } from '../constants';
 
 const initialState = {
@@ -18,8 +18,7 @@ const initialState = {
   isParentAuth: false,
   isChildAuth: false,
   familyData: null,
-  //parents: [],
-  //children: [],
+  selectedChild: null,
   fetching: false,
   apiError: null
 }
@@ -74,13 +73,18 @@ const family = (state=initialState, action) => {
       return {
         ...state,
         fetching: false,
-        familyData: action.payload.family,
+        familyData: action.payload?action.payload.family:null,
         apiError: action.error? action.error : null,
       }
     case SET_IS_FAM_AUTH:
       return {
         ...state,
         isFamAuth: true
+      }
+    case SET_SELECTED_CHILD:
+      return {
+        ...state,
+        selectedChild: action.child
       }
     default:
       return state;
@@ -104,4 +108,27 @@ const addPersonToFamilyData = (family, payload) => {
 
   return family.familyData;
 
+}
+
+const updatePersonToFamilyData = (family, payload) => {
+  console.log('family', family)
+  console.log('payload', payload)
+
+  if(payload.parent) {
+    let filtered =family.familyData.parents.filter(p => {
+      if (p._id !==payload.parent._id) return true;
+    });
+
+    family.familyData.parents=[...filtered, payload.parent]
+  }
+
+  if (payload.child) {
+    let filtered =family.familyData.children.filter(c => {
+      if (c._id !==payload.child._id) return true;
+    });
+
+    family.familyData.children=[...filtered, payload.children]
+  }
+
+  return family.familyData;
 }

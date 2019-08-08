@@ -7,6 +7,8 @@ export const REGISTER_PERSON_DONE = "REGISTER_PERSON_DONE";
 
 export const LOGIN_FAMILY = "LOGIN_FAMILY";
 export const LOGIN_FAMILY_DONE = "LOGIN_FAMILY_DONE";
+export const LOGIN_PERSON = "LOGIN_PERSON";
+export const LOGIN_PERSON_DONE = "LOGIN_PERSON_DONE";
 
 export const SET_IS_FAM_AUTH = "SET_IS_FAM_AUTH";
 export const SET_IS_PARENT_AUTH = "SET_IS_PARENT_AUTH";
@@ -14,6 +16,13 @@ export const SET_IS_CHILD_AUTH = "SET_IS_CHILD_AUTH";
 
 export const SET_FAMILY_DATA = "SET_FAMILY_DATA";
 export const SET_FAMILY_DATA_DONE = "SET_FAMILY_DATA_DONE";
+export const SET_PERSON_DATA = "SET_PERSON_DATA";
+export const SET_PERSON_DATA_DONE = "SET_PERSON_DATA_DONE";
 
+export const SET_SELECTED_CHILD = "SET_SELECTED_CHILD";
+
+//Chores
+export const ADD_CHORE = "ADD_CHORE";
+export const ADD_CHORE_DONE = "ADD_CHORE_DONE";
 
 //Schedule

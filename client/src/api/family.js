@@ -37,6 +37,20 @@ export default {
       .catch(err => reject(err));
     })
   },
+  loginPerson: (data) => {
+    return new global.Promise((resolve, reject) => {
+      let body = {
+        pin: data.pin,
+        person_type: data.person_type,
+        person_id: data.person_id
+      };
+      agent.axios.post("/login-person", body)
+      .then(res => {
+        return resolve(res.data)
+      })
+      .catch(err => reject(err));
+    })
+  },
   getFam: () => {
     return new global.Promise((resolve, reject) => {
       agent.axios.get("/family-data")
@@ -47,4 +61,14 @@ export default {
     })
   },
 
+  //CHORES
+  addChore: (data) => {
+    return new global.Promise((resolve, reject) => {
+      agent.axios.post("/add-chore", {chore:data})
+      .then(res => {
+        return resolve(res.data)
+      })
+      .catch(err => reject(err));
+    })
+  }
 }

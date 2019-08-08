@@ -41,10 +41,7 @@ export class UnconnectedFamilyRegister extends Component {
   onDismissAlert = () => {
     this.setState({visible: false})
   }
-  onShowAlert = () => {
-    this.setState({visible: true})
-  }
-
+ 
   toggleShowPass = () => {
     this.setState({showPass: !this.state.showPass});
   }

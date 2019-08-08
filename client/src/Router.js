@@ -5,6 +5,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import FamilyRegister from "./views/FamilyRegister";
 import FamilyLogin from "./views/FamilyLogin";
 import WhichUser from "./views/WhichUser";
+import DashboardParent from './views/DashboardParent';
+import DashboardChild from './views/DashboardChild';
 
 
 class Router extends Component {
@@ -23,13 +25,6 @@ class Router extends Component {
 
   }
 
-  protectedRoutes = () => {
-    return (
-      <Switch>
-        <Route exact path="/back-routes" component={WhichUser} />
-      </Switch>
-    )
-  }
 
   _isFamJWTset = () => {
     if (localStorage.getItem('family_jwt')) return true;
@@ -39,7 +34,6 @@ class Router extends Component {
   }
 
   _determineRedirectRoute = () => {
-    console.log('props', this.props)
     if (localStorage.getItem('family_jwt')) {
       return '/which-user';
     } else {return '/family-login'}
@@ -55,8 +49,10 @@ class Router extends Component {
         { this.state.famAuth && (
           <Route exact path="/which-user" component={WhichUser} />
         )}
-        {this.state.personAuth ? this.protectedRoutes() : null}
-    
+        
+        <Route exact path="/dashboard-parent/:id" component={DashboardParent} />
+        <Route exact path="/dashboard-child/:id" component={DashboardChild} />
+
         <Route render={() =>{
           return <Redirect to={this._determineRedirectRoute()} />
         } } />

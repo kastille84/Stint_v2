@@ -6,7 +6,9 @@ import {
   REGISTER_PERSON,
   REGISTER_PERSON_DONE,
   SET_FAMILY_DATA,
-  SET_FAMILY_DATA_DONE
+  SET_FAMILY_DATA_DONE,
+  LOGIN_PERSON,
+  LOGIN_PERSON_DONE
 } from "../../constants";
 import api from "../../api";
 import AddParent from './components/AddParent';
@@ -15,7 +17,8 @@ import PersonBox from './components/PersonBox';
 
 const mapStateToProps = state => ({
   familyData: state.family.familyData,
-  whichUserForm: state.form.which_user
+  whichUserForm: state.form.which_user,
+  user: state.user
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,13 +27,6 @@ const mapDispatchToProps = (dispatch) => ({
     api.Family.registerPerson(data)
       .then(payload => {
         dispatch({type: REGISTER_PERSON_DONE, payload: payload});
-        //#set person jwt CONDITIONALLY
-        if(payload.parent) {
-          api.agent.setSession('parent_jwt', payload.token);
-        }
-        if(payload.child) {
-          api.agent.setSession('child_jwt', payload.token);
-        }
         //clear form
         dispatch(reset('which_user'));
       })
@@ -48,6 +44,30 @@ const mapDispatchToProps = (dispatch) => ({
       .catch(err => {
         dispatch({type: SET_FAMILY_DATA_DONE, error: err})
       })
+  },
+  loginPerson: (data, cbVisible, cbPush) => {
+    dispatch({type: LOGIN_PERSON})
+    api.Family.loginPerson(data)
+      .then(payload => {
+        //#set person jwt CONDITIONALLY
+        if(payload.parent) {
+          api.agent.setSession('parent_jwt', payload.token);
+        }
+        if(payload.child) {
+          api.agent.setSession('child_jwt', payload.token);
+        }
+
+        dispatch({type: LOGIN_PERSON_DONE, payload: payload});
+        cbPush();
+      })
+      .catch(err => {
+        dispatch({type: LOGIN_PERSON_DONE, error: err})
+        cbVisible(true)
+      })
+  },
+  resetForm: () => {
+    //clear form
+    dispatch(reset('which_user'));
   }
 })
 
@@ -55,15 +75,17 @@ class WhichUser extends Component {
   state={
     errorMessage: null,
     visible: false,
-    personType: null
+    personType: null,
+    person_id: null,
+    selectedBox: null
   }
 
   componentDidMount() {
-    if(!this.props.familyData) {
-      //#TODO get family data
+    if(!this.props.familyData || !this.props.user.userData) {
       this.props.getFamilyData()
     }
   }
+
   handleSubmit = (values) => {
     const requiredNum = /[0-9]/;
     //check maxLength
@@ -89,7 +111,22 @@ class WhichUser extends Component {
   }
 
   handlePersonLogin = (values)=> {
+    const data = {
+      ...values,
+      person_type: this.state.personType,
+      person_id: this.state.person_id
+    }
 
+    this.props.loginPerson(
+      data,
+      (visibleVal)=> {
+        this.setState({visible:visibleVal})
+      },
+      ()=> {
+        
+        this.props.history.push(`/dashboard-${this.state.personType==='parent'?`parent/${this.state.person_id}`:`child/${this.state.person_id}`}`)
+      }
+    )
   }
 
   renderAlert = (type) => {
@@ -100,13 +137,16 @@ class WhichUser extends Component {
         </Alert>
       )
     }
-    if(this.props.family.apiError) {
+    if((this.props.family||{}).apiError || (this.props.user||{}).apiError) {
       return (
         <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
-          Error: Please Try again later.
+          Wrong Pin. Try again later.
       </Alert>
       )
     }
+  }
+  onDismissAlert = () => {
+    this.setState({visible: false})
   }
 
   _determineToDisableChild = () => {
@@ -116,11 +156,19 @@ class WhichUser extends Component {
   _setPersonType = (type) => {
     this.setState({personType: type})
   }
+  _setPersonId = (id) => {
+    this.setState({person_id: id})
+  }
+  _setSelectedBox = (box) => {
+    this.props.resetForm();
+    this.setState({selectedBox: box, errorMessage:null})
+  }
 
   _renderPersonBox = (type) => {
     return this.props.familyData[type].map(p => {
       return (
-        <PersonBox person={p}>
+        <PersonBox person={p} key={p._id} selectedBox={this.state.selectedBox} setSelectedBox={this._setSelectedBox}>
+        {this.props.user && this.renderAlert('danger')}
           <Form className="which-user-form" onSubmit={this.props.handleSubmit(this.handlePersonLogin)}>
             <section className="form__form-group">
               <label className="form__form-group-label">Pin</label>
@@ -132,13 +180,17 @@ class WhichUser extends Component {
                   placeholder="Unique pin"
                   required
                   autoFocus
+                  maxLen={10}
                 />
               </div>
             </section>
             <button 
               className="btn btn-success mt5" 
               type="submit" 
-              onClick={()=>this._setPersonType('child')}
+              onClick={()=>{
+                this._setPersonType(type==='parents'?'parent':'child')
+                this._setPersonId(p._id)
+              }}
             >Login</button>
           </Form>          
         </PersonBox>
@@ -155,7 +207,7 @@ class WhichUser extends Component {
         <section className="which-user-container mt40">
           {/* PARENT */}
           <article className="parent-side">
-            <AddParent>
+            <AddParent selectedBox={this.state.selectedBox} setSelectedBox={this._setSelectedBox}>
               <Form className="which-user-form" onSubmit={handleSubmit(this.handleSubmit)}>
               <section className="form__form-group">
                 <label className="form__form-group-label">Name</label>
@@ -197,7 +249,7 @@ class WhichUser extends Component {
           </article>
           {/* CHILDREN */}
           <article className="children-side">
-            <AddChild disabled={this._determineToDisableChild()}>
+            <AddChild disabled={this._determineToDisableChild()}  selectedBox={this.state.selectedBox} setSelectedBox={this._setSelectedBox}>
               <Form className="which-user-form" onSubmit={handleSubmit(this.handleSubmit)}>
               <section className="form__form-group">
                 <label className="form__form-group-label">Name</label>
@@ -231,6 +283,12 @@ class WhichUser extends Component {
               >Add</button>
               </Form>
             </AddChild>
+            {/* List of Children*/}
+            <div className="parent-list mt20">
+            {((this.props.familyData||{}).parents||[]).length >0 &&
+              this._renderPersonBox('children')
+            }            
+          </div>
           </article>
         </section>
       </div>

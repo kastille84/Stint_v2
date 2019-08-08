@@ -15,7 +15,9 @@
 @import "./common/_page.scss";
 
 //components
+@import "./components/_chore-list.scss";
 @import "./components/_navigation.scss";
+@import "./components/_widget.scss";
 
 //page
 @import "./pages/_register.scss";

@@ -5,41 +5,40 @@ class AddParent extends Component {
     display: null
   };
 
-  _changeSideToDisplay = side => {
-    this.setState({ display: side });
-  };
-  _toggleSide = () => {
-    switch (this.state.display) {
-      case null:
-      case "front":
-        this.setState({ display: "back" });
-        return;
-      case "back":
-        this.setState({ display: "front" });
-        return;
-      default:
-        return;
-    }
-  };
+  // _changeSideToDisplay = side => {
+  //   this.setState({ display: side });
+  // };
+  // _toggleSide = () => {
+  //   switch (this.state.display) {
+  //     case null:
+  //     case "front":
+  //       this.setState({ display: "back" });
+  //       return;
+  //     case "back":
+  //       this.setState({ display: "front" });
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // };
   render() {
     let display = this.state.display;
     return (
       <div className={`add-person`}>
         <div
-          className={`front ${display === "front" && "show"} ${display ===
-            "back" && "hide"}`}            
-            onClick={()=>this._toggleSide()}
-        >
+        onClick={()=>this.props.setSelectedBox('addParent')}
+        className={`front ${(this.props.selectedBox!=="addParent"||this.props.selectedBox===null) && " show "} ${this.props.selectedBox==="addParent" && " hide "}`}
+      >
           <section />
           <section className="add-person__plus">+</section>
           <section>Parent</section>
         </div>
         <div
-          className={`back  ${(display === "front" || display === null) &&
-            "hide"} ${display === "back" && "show"}`}
+        className={`back ${(this.props.selectedBox==="addParent") && " show "} ${this.props.selectedBox!=="addParent" && " hide "}`}
+
         >          
           <div>
-            <span className="add-person__close" onClick={()=>this._toggleSide()}>x</span>
+            <span className="add-person__close" onClick={()=>this.props.setSelectedBox(null)}>x</span>
           </div>
           {this.props.children}
         </div>

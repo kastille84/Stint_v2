@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mongoose = require('mongoose');
-const {check, validationResult} = require('express-validator/check')
+const {check, validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -13,7 +13,19 @@ const Family = require('../models/family');
 const Parent = require('../models/parent');
 const Child = require('../models/child');
 
-mongoose.connect("mongodb://"+dbUser+":"+dbPass+"@ds345597.mlab.com:45597/stint_v2")
+
+const options = {
+  autoIndex: false, // Don't build indexes
+  reconnectTries: 1000, // Never stop trying to reconnect
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 10, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 1000,
+  useNewUrlParser: true
+};
+
+//mongoose.connect("mongodb://"+dbUser+":"+dbPass+"@ds345597.mlab.com:45597/stint_v2", options)
+mongoose.connect("mongodb://localhost:27017/stint_v2", options)
   .then(() => {
     console.log("connected to mongoDB")
   },
@@ -32,11 +44,9 @@ const passInputValidation = (req, res) => {
 }
 
 //checkJWTtoken middleware
-const checkJWT = (req, res, next) => {
+const checkJWT = (req, res) => {
   let token = jwt.verify(req.headers.authorization, tks);
-  if (token) {
-    next();
-  } else {
+  if (!token) {
     return res.status(500).json({message: "Invalid/missing token. Please login"})
   }
 }
@@ -69,7 +79,7 @@ router.post('/register-family',[
     }
     //at this point save was success
     //create family token
-    const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
+    const token = jwt.sign({id: result._id}, tks)
     return res.status(200).json({
       family: result,
       token: token
@@ -103,7 +113,7 @@ router.post('/register-person', [
       }
        //at this point save was success
       //create family token
-      const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
+      //const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
       //set personId for storing in Family schema
       personId=result._id;
       Family.findOne({_id: req.body.family_id}).exec()
@@ -116,7 +126,7 @@ router.post('/register-person', [
       //send response
       return res.status(200).json({
         parent: result,
-        token: token
+        //token: token
       });
     });
     //#TODO: SAVE PARENT ID IN FAMILY
@@ -136,7 +146,7 @@ router.post('/register-person', [
       }
        //at this point save was success
       //create family token
-      const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
+      //const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
         //set personId for storing in Family schema
         personId=result._id;
         Family.findOne({_id: req.body.family_id}).exec()
@@ -147,10 +157,9 @@ router.post('/register-person', [
         .catch();
       return res.status(200).json({
         child: result,
-        token: token
+        //token: token
       });
     });
-    //#TODO: SAVE CHILD ID IN PARENT
   } 
   else {
     return res.status(500).json({error: "person type is needed"})
@@ -182,7 +191,7 @@ router.post('/login-family',[
         if (same) {
           //passwords match
             //create token
-            const token = jwt.sign({id: family[0]._id}, tks, {expiresIn: '2h'});
+            const token = jwt.sign({id: family[0]._id}, tks);
             //send token and success message
             //also, send the family data obj
             return res.status(200).json({
@@ -205,7 +214,6 @@ router.post('/login-family',[
 //router.use(checkJWT)
 
 router.get("/family-data", (req, res) => {
-  //#TODO -set up route
   let reqToken= req.headers.authorization;
   let decodedJWT=jwt.verify(reqToken, tks);
   Family.findOne({_id: decodedJWT.id})
@@ -221,6 +229,111 @@ router.get("/family-data", (req, res) => {
       return res.status(500).json({message:"Could not retrieve family data"});
     });
 
+});
+
+router.post('/login-person', [
+  check('pin').exists().trim()
+],(req, res) => {
+  checkJWT(req,res);
+  passInputValidation(req, res);
+
+  if(req.body.person_type==="parent") {
+    Parent.findById(req.body.person_id).exec()
+      .then(parent => {
+        bcrypt.compare(req.body.pin,parent.pin, (err, same)=> {
+          if(err) return res.status(500).json({message: "Could not verify. Try again"})
+          if(same) {
+            //create parent_jwt
+            const token = jwt.sign({id: parent._id}, tks)
+            return res.status(200).json({
+              parent: parent,
+              token: token
+            })
+          }else {
+            return res.status(500).json({message: "Wrong pin. Try again"})
+          }
+        })
+      })
+      .catch(err => {
+        return res.status(500).json({message: "Could Not Log In. Try again"})
+      })
+  } else {
+    Child.findById(req.body.person_id).exec()
+    .then(child => {
+        bcrypt.compare(req.body.pin, child.pin, (err, same)=> {
+          if(err) return res.status(500).json({message: "Could not verify. Try again"})
+          if(same) {
+            //create child_jwt
+            const token = jwt.sign({id: child._id}, tks)
+            return res.status(200).json({
+              child: child,
+              token: token
+            })
+          }else {
+            return res.status(500).json({message: "Wrong pin. Try again"})
+          }
+        })
+    })
+    .catch(err => {
+      return res.status(500).json({message: "Could Not Log In. Try again"})
+    })
+  }
+});
+
+// GET PARENT DATA
+router.post('/parent-data', (req, res) => {
+  Parent.findOne({_id: req.body.id}).exec()
+    .then(parent =>{
+      return res.status(200).json({
+        parent: parent
+      });
+    })
+    .catch(err=> res.status(500).json({message: "Could Not Get Parent Data"}))
+});
+// GET Child DATA
+router.post('/child-data', (req, res) => {
+  Child.findOne({_id: req.body.id}).exec()
+    .then(child =>{
+      return res.status(200).json({
+        child: child
+      });
+    })
+    .catch(err=> res.status(500).json({message: "Could Not Get Child Data"}))
+});
+
+// CHORES
+router.post('/add-chore', [
+  check('chore').exists().trim()
+],(req, res) => {
+  checkJWT(req,res);
+  passInputValidation(req, res);
+
+  //find family
+  let reqToken= req.headers.authorization;
+  let decodedJWT=jwt.verify(reqToken, tks);
+  Family.findOne({_id: decodedJWT.id})
+  .exec()
+  .then(family => {
+    //check if chore already exist
+    if(family.chorelist.includes(req.body.chore)) {
+      console.log('family', family);
+      //if exists return 500
+      return res.status(500).json({message:"Chore already exists"});
+    }else {
+        //if not add chore
+        family.chorelist.push(req.body.chore);
+        family.save((err, doc)=> {
+          if (err) {
+            return res.status(500).json({message:"Could not save chore"});
+          }
+          return res.status(200).json({chore: req.body.chore,message:"Chore saved"});
+        })
+      }
+    })
+    .catch(err => {
+      return res.status(500).json({message:"Could not retrieve family data", err: err});
+    });
+  
 })
 
 module.exports = router;
