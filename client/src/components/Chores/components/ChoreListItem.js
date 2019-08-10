@@ -38,6 +38,12 @@ class ChoreListItem extends Component {
     this.setState({chore: this.props.chore})
   }
 
+  componentDidUpdate(prevProps ) {
+    if(prevProps.selected === true && this.props.selected === false) {
+      this.setState({chore: this.props.chore})
+    }
+  }
+
   onDismissAlert = () => {
     this.setState({visible: false})
   }
