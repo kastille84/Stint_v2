@@ -336,4 +336,38 @@ router.post('/add-chore', [
   
 })
 
+router.put('/edit-chore',[
+  check('newChore').exists().trim()
+], (req, res) => {
+  checkJWT(req,res);
+  passInputValidation(req, res);
+  
+  //find family
+  let reqToken= req.headers.authorization;
+  let decodedJWT=jwt.verify(reqToken, tks);
+  Family.findOne({_id: decodedJWT.id})
+  .exec()
+  .then(family => {
+    //find chore
+    const newChoreListArr = family.chorelist.filter(c=> {
+      return (c!==req.body.oldChore)? true: false;
+    });
+    //update the chore chore
+    family.chorelist=[...newChoreListArr,req.body.newChore];
+    family.save((err, result) => {
+      if(err) {
+        return res.status(500).json({error: err})
+      }
+      //at this point save was success
+      return res.status(200).json({
+        newChore: req.body.newChore,
+        oldChore: req.body.oldChore
+      });
+    })
+  })
+  .catch(err => {
+    return res.status(500).json({message:"Could not retrieve family data", err: err});
+  });  
+})
+
 module.exports = router;

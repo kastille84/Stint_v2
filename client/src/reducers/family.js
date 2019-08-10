@@ -10,7 +10,13 @@ import {
   REGISTER_PERSON_DONE,
   SET_FAMILY_DATA,
   SET_FAMILY_DATA_DONE,
-  SET_SELECTED_CHILD
+  SET_SELECTED_CHILD,
+  ADD_CHORE,
+  ADD_CHORE_DONE,
+  EDIT_CHORE,
+  EDIT_CHORE_DONE,
+  DELETE_CHORE,
+  DELETE_CHORE_DONE
 } from '../constants';
 
 const initialState = {
@@ -86,6 +92,39 @@ const family = (state=initialState, action) => {
         ...state,
         selectedChild: action.child
       }
+    case ADD_CHORE:
+      return {
+        ...state,
+        fetching: true
+      }
+    case ADD_CHORE_DONE:
+      return {
+        ...state,
+        familyData: action.payload? {...addChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+        apiError: action.error? action.error : null,
+        fetching: false
+      }
+    case EDIT_CHORE:
+      return {
+        ...state,
+        fetching: true
+      }
+    case EDIT_CHORE_DONE:
+      return {
+        ...state,
+        familyData: action.payload? {...editChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+        apiError: action.error? action.error: null,
+        fetching: false
+      }
+    // case DELETE_CHORE:
+    //   return {
+
+    //   }
+    // case DELETE_CHORE_DONE:
+    //   return {
+
+    //   }
+    
     default:
       return state;
   }
@@ -111,8 +150,6 @@ const addPersonToFamilyData = (family, payload) => {
 }
 
 const updatePersonToFamilyData = (family, payload) => {
-  console.log('family', family)
-  console.log('payload', payload)
 
   if(payload.parent) {
     let filtered =family.familyData.parents.filter(p => {
@@ -130,5 +167,19 @@ const updatePersonToFamilyData = (family, payload) => {
     family.familyData.children=[...filtered, payload.children]
   }
 
+  return family.familyData;
+}
+
+const addChoreToFamilyData = (family, payload) => {
+  family.familyData.chorelist=[...family.familyData.chorelist,payload.chore]
+  return family.familyData;
+}
+
+const editChoreToFamilyData = (family, payload) => {
+  let filteredChorelist=family.familyData.chorelist.filter(c=> {
+    return (c!==payload.oldChore)? true: false;
+  })
+
+  family.familyData.chorelist=[...filteredChorelist, payload.newChore];
   return family.familyData;
 }

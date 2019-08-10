@@ -1,0 +1,34 @@
+.chores {
+  
+  .add-chore-form {
+    .form__form-group-field {
+      display:flex;
+      justify-content: space-between;
+      input {
+        flex:3;
+        &::placeholder {
+          padding-left: 10px;
+        }
+      }
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  .chore-list {
+
+    &-item {
+
+      &--selected {
+        
+      }
+      &--not-selected {
+        cursor: pointer;
+      }
+      &--not-selected:hover {
+
+      }
+    }
+  }
+}

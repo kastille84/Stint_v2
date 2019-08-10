@@ -60,15 +60,5 @@ export default {
       .catch(err => reject(err));
     })
   },
-
-  //CHORES
-  addChore: (data) => {
-    return new global.Promise((resolve, reject) => {
-      agent.axios.post("/add-chore", {chore:data})
-      .then(res => {
-        return resolve(res.data)
-      })
-      .catch(err => reject(err));
-    })
-  }
+  
 }

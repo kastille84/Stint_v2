@@ -8,7 +8,7 @@ class Chore extends Component {
 
   render() {
     return(
-      <section className="chore-list">
+      <section className="chores">
         {/*Form for Adding Chores */}
         <AddChore />
         {/*List of Chores */}
