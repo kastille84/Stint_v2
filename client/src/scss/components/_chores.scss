@@ -29,6 +29,23 @@
       &--not-selected:hover {
 
       }
+
+      &__form {
+
+        .form__form-group-field {
+          display: flex;
+          justify-content: space-between;
+          input {
+            flex:4;
+            &::placeholder {
+              padding-left: 10px;
+            }
+          }
+          button {
+            flex: 1;
+          }
+        }
+      }
     }
   }
 }

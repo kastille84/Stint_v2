@@ -20,6 +20,15 @@ export default {
       })
       .catch(err=>reject(err));
     })
+  },
+  deleteChore: (data) => {
+    return new global.Promise((resolve, reject) => {
+      agent.axios.delete(`/delete-chore/${data}`)
+      .then(res => {
+        return resolve(res.data)
+      })
+      .catch(err=>reject(err));
+    })    
   }
 
 }

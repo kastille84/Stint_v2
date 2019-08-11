@@ -116,15 +116,18 @@ const family = (state=initialState, action) => {
         apiError: action.error? action.error: null,
         fetching: false
       }
-    // case DELETE_CHORE:
-    //   return {
-
-    //   }
-    // case DELETE_CHORE_DONE:
-    //   return {
-
-    //   }
-    
+    case DELETE_CHORE:
+      return {
+        ...state,
+        fetching: true
+      }
+    case DELETE_CHORE_DONE:
+      return {
+        ...state,
+        familyData: action.payload?{...deleteChoreToFamilyData({familyData: state.familyData}, action.payload)}: state.familyData,
+        apiError: action.error? action.error: null,
+        fetching: false
+      }    
     default:
       return state;
   }
@@ -149,37 +152,40 @@ const addPersonToFamilyData = (family, payload) => {
 
 }
 
-const updatePersonToFamilyData = (family, payload) => {
+// const updatePersonToFamilyData = (family, payload) => {
 
-  if(payload.parent) {
-    let filtered =family.familyData.parents.filter(p => {
-      if (p._id !==payload.parent._id) return true;
-    });
+//   if(payload.parent) {
+//     let filtered =family.familyData.parents.filter(p => {
+//       if (p._id !==payload.parent._id) return true;
+//     });
 
-    family.familyData.parents=[...filtered, payload.parent]
-  }
+//     family.familyData.parents=[...filtered, payload.parent]
+//   }
 
-  if (payload.child) {
-    let filtered =family.familyData.children.filter(c => {
-      if (c._id !==payload.child._id) return true;
-    });
+//   if (payload.child) {
+//     let filtered =family.familyData.children.filter(c => {
+//       if (c._id !==payload.child._id) return true;
+//     });
 
-    family.familyData.children=[...filtered, payload.children]
-  }
+//     family.familyData.children=[...filtered, payload.children]
+//   }
 
-  return family.familyData;
-}
+//   return family.familyData;
+// }
 
 const addChoreToFamilyData = (family, payload) => {
   family.familyData.chorelist=[...family.familyData.chorelist,payload.chore]
   return family.familyData;
 }
-
 const editChoreToFamilyData = (family, payload) => {
   let filteredChorelist=family.familyData.chorelist.filter(c=> {
     return (c!==payload.oldChore)? true: false;
   })
 
   family.familyData.chorelist=[...filteredChorelist, payload.newChore];
+  return family.familyData;
+}
+const deleteChoreToFamilyData = (family, payload) => {
+  family.familyData.chorelist=payload.newChoreList;
   return family.familyData;
 }

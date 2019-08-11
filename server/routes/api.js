@@ -359,6 +359,7 @@ router.put('/edit-chore',[
         return res.status(500).json({error: err})
       }
       //at this point save was success
+      //#TODO - change chore for each child in Schedule
       return res.status(200).json({
         newChore: req.body.newChore,
         oldChore: req.body.oldChore
@@ -368,6 +369,39 @@ router.put('/edit-chore',[
   .catch(err => {
     return res.status(500).json({message:"Could not retrieve family data", err: err});
   });  
+})
+
+router.delete('/delete-chore/:chore', (req, res) => {
+  checkJWT(req,res);
+  passInputValidation(req, res);
+  
+  //find family
+  let reqToken= req.headers.authorization;
+  let decodedJWT=jwt.verify(reqToken, tks);
+  Family.findOne({_id: decodedJWT.id})
+  .exec()
+  .then(family => {
+    //find chore
+    const newChoreListArr = family.chorelist.filter(c=> {
+      return (c!==req.params.chore)? true: false;
+    });
+    console.log('chore to delete', req.params.chore)
+    //update the chore chore
+    family.chorelist=newChoreListArr;
+    family.save((err, result) => {
+      if(err) {
+        return res.status(500).json({error: err})
+      }
+      //at this point save was success
+      //#TODO - delete chore for each child in Schedule
+      return res.status(200).json({
+        newChoreList: newChoreListArr
+      });
+    })
+  })
+  .catch(err => {
+    return res.status(500).json({message:"Could not retrieve family data", err: err});
+  }); 
 })
 
 module.exports = router;

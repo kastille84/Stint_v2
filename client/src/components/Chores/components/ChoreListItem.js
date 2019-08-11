@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {Alert} from 'reactstrap';
-import { EDIT_CHORE, EDIT_CHORE_DONE } from '../../../constants';
+import { 
+  EDIT_CHORE, 
+  EDIT_CHORE_DONE, 
+  DELETE_CHORE, 
+  DELETE_CHORE_DONE 
+} from '../../../constants';
 import api from '../../../api';
 
 const mapStateToProps = state => ({
@@ -18,6 +23,17 @@ const mapDispatchToProps = (dispatch) => ({
       .catch(err=> {
         dispatch({type:EDIT_CHORE_DONE, error: err})
         cbVisible(true)
+      })
+  },
+  deleteChore: (data, cbVisible) => {
+    dispatch({type: DELETE_CHORE});
+    api.Chore.deleteChore(data)
+      .then(payload => {
+        dispatch({type:DELETE_CHORE_DONE, payload: payload})
+      })
+      .catch(err => {
+        dispatch({type:DELETE_CHORE_DONE, error: err})
+        cbVisible(true);
       })
   }
 })
@@ -85,6 +101,15 @@ class ChoreListItem extends Component {
 
   }
 
+  handleDeleteSubmit = () => {
+    this.props.deleteChore(
+      this.props.chore,
+      (visibleVal) => {
+        this.setState({visible: visibleVal})
+      }
+    )
+  }
+
   renderAlert = (type) => {
     if (this.state.errorMessage) {
       return (
@@ -122,7 +147,7 @@ class ChoreListItem extends Component {
               autoFocus
             />
             <button className="btn btn-sm btn-success" type="button" onClick={this.handleEditSubmit}>Edit</button>
-            <button className="btn btn-sm btn-danger" type="button" >X</button>
+            <button className="btn btn-sm btn-danger" type="button" onClick={this.handleDeleteSubmit} >X</button>
           </div>
         </section>
       </form>
