@@ -29,6 +29,12 @@ const schema = new Schema({
       ref: 'Child'
     }
   ],
+  schedules: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Schedule'
+    }
+  ],
   chorelist: [String]
 
 })

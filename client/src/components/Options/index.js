@@ -27,6 +27,13 @@ class Options extends Component {
       this.props.setSelectedChild(this.props.family.familyData.children[0])
     }
   }
+  componentDidUpdate(prevProps) {
+    //set first child as default selected if none selected
+    //dispatch call
+    if( prevProps.family.familyData===null && this.props.family.familyData !==null ){
+      this.props.setSelectedChild(this.props.family.familyData.children[0])
+    }
+  }
 
   toggle() {
     this.setState({ collapse: !this.state.collapse });
@@ -53,7 +60,11 @@ class Options extends Component {
           >
             {(((family||{}).familyData||{}).children||[]).map(c=> {
               return (
-                <option value={c._id} selected={(family.selectedChild||{})._id===c._id && 'true'}>
+                <option 
+                  value={c._id} 
+                  selected={(family.selectedChild||{})._id===c._id && true}
+                  key={c._id}
+                >
                   {c.name}
                 </option>
               )

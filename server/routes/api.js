@@ -12,6 +12,7 @@ const { dbUser, dbPass, tks } = require('../config/config');
 const Family = require('../models/family');
 const Parent = require('../models/parent');
 const Child = require('../models/child');
+const Schedule = require('../models/schedule');
 
 
 const options = {
@@ -140,25 +141,34 @@ router.post('/register-person', [
       name: req.body.name,
       family_id: req.body.family_id
     });
-    child.save((err, result) => {
+    child.save((err, childDoc) => {
       if(err) {
         return res.status(500).json({error: err})
       }
        //at this point save was success
-      //create family token
-      //const token = jwt.sign({id: result._id}, tks, {expiresIn: '2h'})
-        //set personId for storing in Family schema
-        personId=result._id;
-        Family.findOne({_id: req.body.family_id}).exec()
-        .then(fam=>{
-          fam.children = [...fam.children, personId];
-          fam.save();
-        })
-        .catch();
-      return res.status(200).json({
-        child: result,
-        //token: token
-      });
+       // create a schedule record for the child
+      const schedule = new Schedule({
+        family_id: req.body.family_id,
+        child_id: childDoc._id
+      })
+      schedule.save((err, scheduleDoc) => {
+        if(err) {
+          return res.status(500).json({error: err})
+        }
+        // schedule save was successful
+          //set personId for storing in Family schema
+          personId=childDoc._id;
+          Family.findOne({_id: req.body.family_id}).exec()
+          .then(fam=>{
+            fam.children = [...fam.children, personId];
+            fam.schedules = [...fam.schedules, scheduleDoc._id]
+            fam.save();
+          })
+          .catch();
+        return res.status(200).json({
+          child: childDoc
+        });
+      })
     });
   } 
   else {
@@ -219,6 +229,7 @@ router.get("/family-data", (req, res) => {
   Family.findOne({_id: decodedJWT.id})
     .populate('parents')
     .populate('children')
+    .populate('schedules')
     .exec()
     .then(doc => {
       return res.status(200).json({
@@ -316,13 +327,12 @@ router.post('/add-chore', [
   .then(family => {
     //check if chore already exist
     if(family.chorelist.includes(req.body.chore)) {
-      console.log('family', family);
       //if exists return 500
       return res.status(500).json({message:"Chore already exists"});
     }else {
         //if not add chore
         family.chorelist.push(req.body.chore);
-        family.save((err, doc)=> {
+        family.save((err, famDoc)=> {
           if (err) {
             return res.status(500).json({message:"Could not save chore"});
           }
@@ -360,6 +370,12 @@ router.put('/edit-chore',[
       }
       //at this point save was success
       //#TODO - change chore for each child in Schedule
+      // Schedule.find(
+      //   {"family_id":family._id},
+      //   {"$set": {
+      //     "monday": updateChores()
+      //   }}
+      // )
       return res.status(200).json({
         newChore: req.body.newChore,
         oldChore: req.body.oldChore
@@ -370,7 +386,9 @@ router.put('/edit-chore',[
     return res.status(500).json({message:"Could not retrieve family data", err: err});
   });  
 })
-
+// const updateChores = () => {
+  
+// }
 router.delete('/delete-chore/:chore', (req, res) => {
   checkJWT(req,res);
   passInputValidation(req, res);

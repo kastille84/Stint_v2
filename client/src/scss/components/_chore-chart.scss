@@ -1,0 +1,42 @@
+
+  //CHORE CHART
+  .chore-chart {
+
+    thead {
+      th {
+        text-align:center;
+      }
+    }
+
+    tbody {
+      td:first-of-type {
+        vertical-align: middle;
+      }
+      td {
+        text-align:center;
+      }
+      .tile-wrapper {
+        padding:10px;
+
+
+        .tile {
+          min-width: 40px;
+          width:80%;
+          min-height: 40px;
+          height: 80%;
+          margin:auto;
+          border-radius: 12px;
+          box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+        }
+        .tile--green {background: green}
+        .tile--red {background: red}
+        .tile--white {background: white}
+        .tile--edit{
+          cursor:pointer;
+        }
+        .tile--no-edit {
+
+        }
+      }
+    }
+  }

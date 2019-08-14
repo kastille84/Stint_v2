@@ -34,6 +34,7 @@ class ChoreList extends Component {
         return (
           <ChoreListItem 
             chore={c} 
+            key={c}
             selected={this._determineSelected(c)}
             setSelected={this._setSelected}
           />

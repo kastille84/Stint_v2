@@ -1,5 +1,6 @@
 .chores {
   
+  // ADD CHORE FORM
   .add-chore-form {
     .form__form-group-field {
       display:flex;
@@ -16,6 +17,7 @@
     }
   }
 
+  // CHORE LIST
   .chore-list {
 
     &-item {
@@ -36,7 +38,8 @@
           display: flex;
           justify-content: space-between;
           input {
-            flex:4;
+            padding-left: 10px;
+            flex:5;
             &::placeholder {
               padding-left: 10px;
             }
@@ -48,4 +51,5 @@
       }
     }
   }
+
 }

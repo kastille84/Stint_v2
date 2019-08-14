@@ -13,7 +13,7 @@ const schema = new Schema({
   family_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
-  },
+  }
   // parents_id: [{
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: 'Parent'
