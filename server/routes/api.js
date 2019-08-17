@@ -370,25 +370,72 @@ router.put('/edit-chore',[
       }
       //at this point save was success
       //#TODO - change chore for each child in Schedule
-      // Schedule.find(
-      //   {"family_id":family._id},
-      //   {"$set": {
-      //     "monday": updateChores()
-      //   }}
-      // )
-      return res.status(200).json({
-        newChore: req.body.newChore,
-        oldChore: req.body.oldChore
-      });
+      let promiseArr = [];
+      Schedule.find({"family_id":family._id}).exec()
+        .then(schedules=> {
+          for(let schedule of schedules) {
+            //Monday
+            schedule['monday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['monday'][idx].chore=req.body.newChore;
+              }
+            })
+            //tuesday
+            schedule['tuesday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['tuesday'][idx].chore=req.body.newChore;
+              }
+            })
+            //wednesday
+            schedule['wednesday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['wednesday'][idx].chore=req.body.newChore;
+              }
+            })
+            //thursday
+            schedule['thursday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['thursday'][idx].chore=req.body.newChore;
+              }
+            })
+            //friday
+            schedule['friday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['friday'][idx].chore=req.body.newChore;
+              }
+            })
+            //saturday
+            schedule['saturday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['saturday'][idx].chore=req.body.newChore;
+              }
+            })
+            //sunday
+            schedule['sunday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.body.oldChore) {
+                schedule['sunday'][idx].chore=req.body.newChore;
+              }
+            })
+            promiseArr.push(schedule.save())
+          }
+        })
+        Promise.all(promiseArr)
+        .then(result=> {
+          return res.status(200).json({
+            newChore: req.body.newChore,
+            oldChore: req.body.oldChore
+          });
+        })
+        .catch(err=> {
+          return res.status(500).json({message:"Could not update schedules", err: err});
+        })
     })
   })
   .catch(err => {
     return res.status(500).json({message:"Could not retrieve family data", err: err});
   });  
 })
-// const updateChores = () => {
-  
-// }
+
 router.delete('/delete-chore/:chore', (req, res) => {
   checkJWT(req,res);
   passInputValidation(req, res);
@@ -412,9 +459,65 @@ router.delete('/delete-chore/:chore', (req, res) => {
       }
       //at this point save was success
       //#TODO - delete chore for each child in Schedule
-      return res.status(200).json({
-        newChoreList: newChoreListArr
-      });
+      let promiseArr = [];
+      Schedule.find({"family_id":family._id}).exec()
+        .then(schedules=> {
+          for(let schedule of schedules) {
+            //Monday
+            schedule['monday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['monday'].splice(idx,1)
+              }
+            })
+            //tuesday
+            schedule['tuesday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['tuesday'].splice(idx,1)
+              }
+            })
+            //wednesday
+            schedule['wednesday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                  schedule['wednesday'].splice(idx,1)
+              }
+            })
+            //thursday
+            schedule['thursday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['thursday'].splice(idx,1)
+              }
+            })
+            //friday
+            schedule['friday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['friday'].splice(idx,1)
+              }
+            })
+            //saturday
+            schedule['saturday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['saturday'].splice(idx,1)
+              }
+            })
+            //sunday
+            schedule['sunday'].forEach((choreObj,idx)=> {
+              if(choreObj.chore===req.params.chore) {
+                schedule['sunday'].splice(idx,1)
+              }
+            })
+            promiseArr.push(schedule.save())
+          }
+        })
+        Promise.all(promiseArr)
+        .then(result=> {
+          return res.status(200).json({
+            newChoreList: newChoreListArr,
+            oldChore: req.params.chore
+          });
+        })
+        .catch(err=> {
+          return res.status(500).json({message:"Could not update schedules", err: err});
+        })
     })
   })
   .catch(err => {

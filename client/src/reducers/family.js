@@ -18,6 +18,7 @@ import {
   DELETE_CHORE,
   DELETE_CHORE_DONE
 } from '../constants';
+import reducerUtils from '../util/reducerUtils';
 
 const initialState = {
   isFamAuth: false,
@@ -54,7 +55,7 @@ const family = (state=initialState, action) => {
       return {
         ...state,
         fetching: false,
-        familyData: action.payload? addPersonToFamilyData({familyData:state.familyData},action.payload) : null,
+        familyData: action.payload? reducerUtils.addPersonToFamilyData({familyData:state.familyData},action.payload) : null,
         apiError: action.error? action.error : null
       }
     case LOGIN_FAMILY:
@@ -100,7 +101,7 @@ const family = (state=initialState, action) => {
     case ADD_CHORE_DONE:
       return {
         ...state,
-        familyData: action.payload? {...addChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+        familyData: action.payload? {...reducerUtils.addChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
         apiError: action.error? action.error : null,
         fetching: false
       }
@@ -112,9 +113,10 @@ const family = (state=initialState, action) => {
     case EDIT_CHORE_DONE:
       return {
         ...state,
-        familyData: action.payload? {...editChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+        familyData: action.payload? {...reducerUtils.editChoreToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
         apiError: action.error? action.error: null,
-        fetching: false
+        fetching: false,
+
       }
     case DELETE_CHORE:
       return {
@@ -124,7 +126,7 @@ const family = (state=initialState, action) => {
     case DELETE_CHORE_DONE:
       return {
         ...state,
-        familyData: action.payload?{...deleteChoreToFamilyData({familyData: state.familyData}, action.payload)}: state.familyData,
+        familyData: action.payload?{...reducerUtils.deleteChoreToFamilyData({familyData: state.familyData}, action.payload)}: state.familyData,
         apiError: action.error? action.error: null,
         fetching: false
       }    
@@ -136,21 +138,7 @@ const family = (state=initialState, action) => {
 
 export default family;
 
-const addPersonToFamilyData = (family, payload) => {
-  console.log('familyData', family)
-  console.log('person', payload)
 
-  if(payload.parent) {
-    family.familyData.parents.push(payload.parent)
-  }
-
-  if (payload.child) {
-    family.familyData.children.push(payload.child)
-  }
-
-  return family.familyData;
-
-}
 
 // const updatePersonToFamilyData = (family, payload) => {
 
@@ -173,19 +161,3 @@ const addPersonToFamilyData = (family, payload) => {
 //   return family.familyData;
 // }
 
-const addChoreToFamilyData = (family, payload) => {
-  family.familyData.chorelist=[...family.familyData.chorelist,payload.chore]
-  return family.familyData;
-}
-const editChoreToFamilyData = (family, payload) => {
-  let filteredChorelist=family.familyData.chorelist.filter(c=> {
-    return (c!==payload.oldChore)? true: false;
-  })
-
-  family.familyData.chorelist=[...filteredChorelist, payload.newChore];
-  return family.familyData;
-}
-const deleteChoreToFamilyData = (family, payload) => {
-  family.familyData.chorelist=payload.newChoreList;
-  return family.familyData;
-}

@@ -1,21 +1,104 @@
 import React, {Component} from 'react';
 
-class Tile extends Component {
+const findCompletedStatus = (day, chore, currentSchedule) => {
+  let filteredDayArr =  (currentSchedule[day]||[]).filter(choreObj=> {
+    if(choreObj.chore === chore) {return true}
+    return false;
+  })
+  return (filteredDayArr[0]||{}).completed;
+}
 
-  determineColor = () => {
-    if(this.props.completed===true) {
-      return 'green'
-    } else if(this.props.completed===false) {
-      return 'red'
-    } else if (this.props.completed===null) {
-      return 'white'
+class Tile extends Component {
+  state = {
+    color: null,
+    completed:null 
+  }
+
+  static getDerivedStateFromProps(props) {
+    let completed = findCompletedStatus(props.day, props.chore, props.currentSchedule);
+    if(completed===true) {
+      return {
+        color: 'green',
+        completed: true
+      }
+    } else if(completed===false) {
+      return {
+        color: 'red',
+        completed: false
+      }
+    } else if (completed===null) {
+      return {
+        color: 'white',
+        completed: null
+      }
+    } else {
+      return {
+        color: 'white',
+        completed: null
+      }
+    }
+  }
+
+
+  // componetDidMount() {
+  //     if(this.props.completed===true) {
+  //       this.setState({
+  //         color: 'green',
+  //         completed: true
+  //       })
+  //     } else if(this.props.completed===false) {
+  //       this.setState({
+  //         color: 'red',
+  //         completed: false
+  //       })
+  //     } else if (this.props.completed===null) {
+  //       this.setState({
+  //         color: 'white',
+  //         completed: null
+  //       })
+  //     } 
+  // }
+
+
+  handleClick = () => {
+    if(this.props.editable && this.props.editMode) {
+      if(this.state.color==='red') {
+
+          //call parent function to edit child's chore
+          this.props.editChoreInSchedule({
+            day: this.props.day,
+            chore: this.props.chore,
+            nextCompletedStatus: true
+          })
+
+      } else if(this.state.color==='green') {
+
+          //call parent function to edit child's chore
+          this.props.editChoreInSchedule({
+            day: this.props.day,
+            chore: this.props.chore,
+            nextCompletedStatus: null
+          })
+      
+      } else if (this.state.color==='white') {
+
+          //call parent function to edit child's chore
+          this.props.editChoreInSchedule({
+            day: this.props.day,
+            chore: this.props.chore,
+            nextCompletedStatus: false
+          })
+
+      }
     }
   }
 
   render(){
     return (
       <div 
-        className={`tile tile--${this.determineColor()} ${this.props.editable? 'tile--edit':'tile--no-edit'}`}>
+        className={`tile tile--${this.state.color} ${this.props.editable? 'tile--edit':'tile--no-edit'}`}
+        onClick={()=>{this.handleClick()}}
+      >
         
       </div>
     )

@@ -9,10 +9,18 @@ class ChoreChart extends Component {
 
   state ={
     isEditable: false,
+    editMode: false,
     schedule: []
   }
 
-
+  componentDidMount() {
+    if( this.props.selectedChild) {
+      this.setState({
+        schedule:this.findChildSchedule(this.props.selectedChild._id),
+        isEditable: this.props.personType==='parent'? true: false
+      });
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if( prevProps.selectedChild !== this.props.selectedChild) {
@@ -31,6 +39,53 @@ class ChoreChart extends Component {
       })[0]
   }
 
+  editChoreInSchedule = ({day,chore,nextCompletedStatus}) => {
+    console.log('day', day)
+    console.log('chore', chore)
+    console.log('nextCompletedstatus', nextCompletedStatus)
+
+    let copyOfDayArr = [...this.state.schedule[day] ];
+    //means, we are manipulating or adding to whats in copyOfDayArr
+    if(nextCompletedStatus !== null) {
+      //search array for chore object, 
+      //ill either come up with an object or no object
+      if (copyOfDayArr.length >0) {
+        let found = false;
+        copyOfDayArr.forEach((choreObj,idx) => {
+          if(choreObj.chore===chore) {
+            copyOfDayArr[idx].completed=nextCompletedStatus
+            found=true;
+          }
+        })
+        if (!found) {
+          //means theres chores in here, but not the one we are looking for
+          copyOfDayArr.push({
+            chore: chore,
+            completed: nextCompletedStatus
+          })
+        }
+      } else {
+        copyOfDayArr.push({
+          chore: chore,
+          completed: nextCompletedStatus
+        })
+      }
+    //means theres something in copyOfDayArr that needs to be removed
+    } else {
+      copyOfDayArr=[...copyOfDayArr].filter( (choreObj, idx) => {
+        if (choreObj.chore === chore){
+          return false;
+        }
+        else return true;
+      })
+    }
+    let newSchedule = this.state.schedule;
+    newSchedule[day]=copyOfDayArr;
+    this.setState({
+      schedule: newSchedule
+    })
+  }
+
   determineTile = (day,chore) => {
     //find schedule
     let schedule = this.state.schedule ||[];
@@ -46,8 +101,10 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            completed={true}
+            currentSchedule={this.state.schedule}
             editable={this.state.isEditable}
+            editMode={this.state.editMode}
+            editChoreInSchedule={this.editChoreInSchedule}
           />
         )
       } else if (filtered.length >0 && filtered[0].completed===false) {
@@ -55,8 +112,10 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            completed={false}
+            currentSchedule={this.state.schedule}
             editable={this.state.isEditable}
+            editMode={this.state.editMode}
+            editChoreInSchedule={this.editChoreInSchedule}
           />
           )
       } else {
@@ -65,8 +124,10 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            completed={null}
+            currentSchedule={this.state.schedule}
             editable={this.state.isEditable}
+            editMode={this.state.editMode}
+            editChoreInSchedule={this.editChoreInSchedule}
           />
           )
       }
@@ -77,19 +138,46 @@ class ChoreChart extends Component {
         <Tile
           day={day}
           chore={chore}
-          completed={null}
+          currentSchedule={this.state.schedule}
           editable={this.state.isEditable}
+          editMode={this.state.editMode}
+          editChoreInSchedule={this.editChoreInSchedule}
         />
         )
     }
+  }
 
+  setEditMode = (val) => {
+    this.setState({editMode: val})
+  }
+  renderEditButtons = () => {
+    if(this.state.isEditable) {
+      //isEditable means we are in Parent Dashboard
+      if(this.state.editMode===false) {
+        return (
+          <div className="chore-chart-controls">
+            <button className="btn btn-success" onClick={()=>{this.setEditMode(true)}}>Edit</button>
+          </div>
+        )
+      } else {
+        return (
+          <div className="chore-chart-controls">
+            <button 
+              className="btn btn-primary" 
+              onClick={()=>{
+                this.setEditMode(false)
+              }}>Save</button>
+          </div>
+        )        
+      }
+    }
   }
 
   render() {
     return (
       <section className="chore-chart">
         <p className="page-widget-title">Chore Chart</p>
-        <Table responsive>
+        <Table responsive className="mt20">
           <thead>
             <tr>
               <th></th><th>Mon</th><th>Tues</th><th>Wed</th><th>Thurs</th><th>Fri</th><th>Sat</th><th>Sun</th>
@@ -141,6 +229,7 @@ class ChoreChart extends Component {
             })}
           </tbody>
         </Table>
+        {this.renderEditButtons()}
       </section>
     )
   }
