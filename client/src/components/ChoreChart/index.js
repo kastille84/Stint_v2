@@ -3,34 +3,78 @@ import {connect} from 'react-redux';
 import {Table} from 'reactstrap';
 import Loader from "react-loader-spinner";
 import Tile from './components/Tile';
+import {Alert} from 'reactstrap';
 
+import {
+  SAVE_SCHEDULE,
+  SAVE_SCHEDULE_DONE
+} from '../../constants';
+import api from '../../api';
+
+const mapStateToProps = state => ({
+  user: state.user,
+  family: state.family,
+  familyData: state.family.familyData,
+  fetching: state.family.fetching,
+  selectedChild: state.family.selectedChild,
+  personType: state.user.personType,
+  //originalSchedules: state.family.familyData.schedules
+})
+
+const mapDispatchToProps = dispatch => ({
+  saveSchedule: (child_id, schedule, cbVisible, cbEditMode) => {
+    dispatch({type: SAVE_SCHEDULE})
+    api.Schedule.saveSchedule(child_id, schedule)
+      .then(payload => {
+        dispatch({type: SAVE_SCHEDULE_DONE, payload})
+        cbEditMode()
+      })
+      .catch(err=> {
+        dispatch({type: SAVE_SCHEDULE_DONE, error: err}) 
+        cbVisible(true)
+        cbEditMode()
+      })
+  }
+})
 
 class ChoreChart extends Component {
 
   state ={
     isEditable: false,
     editMode: false,
-    schedule: []
+    schedule: [],
+    scheduleBeforeSave: null,
+    visible: false,
+    errorMessage: null
   }
 
   componentDidMount() {
-    if( this.props.selectedChild) {
-      this.setState({
-        schedule:this.findChildSchedule(this.props.selectedChild._id),
-        isEditable: this.props.personType==='parent'? true: false
-      });
-    }
+    //if( this.props.selectedChild) {
+      // console.log('****got called')
+      // this.setState({
+      //   schedule:this.findChildSchedule(this.props.selectedChild._id),
+      //   isEditable: this.props.personType==='parent'? true: false
+      // });
+    //}
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if( prevProps.selectedChild !== this.props.selectedChild) {
       this.setState({
         schedule:this.findChildSchedule(this.props.selectedChild._id),
         isEditable: this.props.personType==='parent'? true: false
       });
     }
+    // if(prevState.editMode !== this.state.editMode) {
+    //   this.setState({
+    //     scheduleBeforeSave: prevState.schedule
+    //   })
+    // }
   }
 
+  onDismissAlert = () => {
+    this.setState({visible: false})
+  }
 
   findChildSchedule = (child_id) => {
       return (this.props.familyData||{}).schedules.filter(s=> {
@@ -40,12 +84,8 @@ class ChoreChart extends Component {
   }
 
   editChoreInSchedule = ({day,chore,nextCompletedStatus}) => {
-    console.log('day', day)
-    console.log('chore', chore)
-    console.log('nextCompletedstatus', nextCompletedStatus)
-
     let copyOfDayArr = [...this.state.schedule[day] ];
-    //means, we are manipulating or adding to whats in copyOfDayArr
+    //means, we are manipulating or adding to whats already in copyOfDayArr
     if(nextCompletedStatus !== null) {
       //search array for chore object, 
       //ill either come up with an object or no object
@@ -64,6 +104,7 @@ class ChoreChart extends Component {
             completed: nextCompletedStatus
           })
         }
+        //means this day is completely empty, so add first entry
       } else {
         copyOfDayArr.push({
           chore: chore,
@@ -84,6 +125,29 @@ class ChoreChart extends Component {
     this.setState({
       schedule: newSchedule
     })
+  }
+
+  saveSchedule = () => {
+    this.props.saveSchedule(
+      this.props.selectedChild._id,
+      this.state.schedule,
+      ()=> {
+        this.setState({visible: true})
+      },
+      ()=> {
+        this.setEditMode(false)
+      }
+    )
+  }
+
+  renderAlert = (type) => {
+    if(this.props.family.apiError) {
+      return (
+        <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
+          {this.props.family.apiError.response.data.message}
+      </Alert>
+      )
+    }
   }
 
   determineTile = (day,chore) => {
@@ -148,7 +212,10 @@ class ChoreChart extends Component {
   }
 
   setEditMode = (val) => {
-    this.setState({editMode: val})
+    this.setState({
+      editMode: val,
+      scheduleBeforeSave: {...this.state.schedule}
+    })
   }
   renderEditButtons = () => {
     if(this.state.isEditable) {
@@ -166,7 +233,16 @@ class ChoreChart extends Component {
               className="btn btn-primary" 
               onClick={()=>{
                 this.setEditMode(false)
+                this.saveSchedule()
               }}>Save</button>
+            <button 
+              className="btn btn-info" 
+              onClick={()=>{
+                this.setState({
+                  editMode: false,
+                  schedule: this.state.scheduleBeforeSave
+                })
+              }}>Cancel</button>
           </div>
         )        
       }
@@ -177,6 +253,7 @@ class ChoreChart extends Component {
     return (
       <section className="chore-chart">
         <p className="page-widget-title">Chore Chart</p>
+        {this.renderAlert()}
         <Table responsive className="mt20">
           <thead>
             <tr>
@@ -235,11 +312,5 @@ class ChoreChart extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-  familyData: state.family.familyData,
-  fetching: state.family.fetching,
-  selectedChild: state.family.selectedChild,
-  personType: state.user.personType
-})
-export default connect(mapStateToProps)(ChoreChart)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChoreChart)

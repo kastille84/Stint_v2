@@ -33,6 +33,10 @@
         .tile--white {background: white}
         .tile--edit{
           cursor:pointer;
+          animation-name: editTile;
+          animation-duration: .3s;
+          animation-iteration-count: infinite;
+          //animation-direction: alternate;
         }
         .tile--no-edit {
 

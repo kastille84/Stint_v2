@@ -30,3 +30,5 @@ export const DELETE_CHORE = "DELETE_CHORE";
 export const DELETE_CHORE_DONE = "DELETE_CHORE_DONE";
 
 //Schedule
+export const SAVE_SCHEDULE = "SAVE_SCHEDULE";
+export const SAVE_SCHEDULE_DONE = "SAVE_SCHEDULE_DONE";

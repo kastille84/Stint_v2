@@ -16,7 +16,9 @@ import {
   EDIT_CHORE,
   EDIT_CHORE_DONE,
   DELETE_CHORE,
-  DELETE_CHORE_DONE
+  DELETE_CHORE_DONE,
+  SAVE_SCHEDULE,
+  SAVE_SCHEDULE_DONE
 } from '../constants';
 import reducerUtils from '../util/reducerUtils';
 
@@ -129,7 +131,19 @@ const family = (state=initialState, action) => {
         familyData: action.payload?{...reducerUtils.deleteChoreToFamilyData({familyData: state.familyData}, action.payload)}: state.familyData,
         apiError: action.error? action.error: null,
         fetching: false
-      }    
+      }  
+    case SAVE_SCHEDULE:
+      return {
+        ...state,
+        fetching: true
+      }  
+    case SAVE_SCHEDULE_DONE:
+      return {
+        ...state,
+        familyData: action.payload?{...reducerUtils.updateScheduleToFamilyData({familyData: state.familyData}, action.payload)}: state.familyData,
+        apiError: action.error? action.error: null,
+        fetching: false
+      }  
     default:
       return state;
   }

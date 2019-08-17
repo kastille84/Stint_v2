@@ -450,7 +450,6 @@ router.delete('/delete-chore/:chore', (req, res) => {
     const newChoreListArr = family.chorelist.filter(c=> {
       return (c!==req.params.chore)? true: false;
     });
-    console.log('chore to delete', req.params.chore)
     //update the chore chore
     family.chorelist=newChoreListArr;
     family.save((err, result) => {
@@ -523,6 +522,30 @@ router.delete('/delete-chore/:chore', (req, res) => {
   .catch(err => {
     return res.status(500).json({message:"Could not retrieve family data", err: err});
   }); 
+})
+
+router.put('/save-schedule', (req, res) => {
+  checkJWT(req,res);
+  passInputValidation(req, res);
+  
+  //find schedule
+  Schedule.findOneAndUpdate({child_id: req.body.child_id}).exec()
+    .then(schedule=> {
+      schedule.monday=req.body.schedule.monday;
+      schedule.tuesday=req.body.schedule.tuesday;
+      schedule.wednesday=req.body.schedule.wednesday;
+      schedule.thursday=req.body.schedule.thursday;
+      schedule.friday=req.body.schedule.friday;
+      schedule.saturday=req.body.schedule.saturday;
+      schedule.sunday=req.body.schedule.sunday;
+      schedule.save((err, scheduleDoc)=> {
+        if(err){return res.status(500).json({message:"Could not update schedules", err: err}); }
+        return res.status(200).json({newSchedule:scheduleDoc})
+      })
+    })
+    .catch(err=> {
+      return res.status(500).json({message:"Could not retrieve schedule data", err: err});
+    })
 })
 
 module.exports = router;

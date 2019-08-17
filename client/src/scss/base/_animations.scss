@@ -8,3 +8,32 @@
   display: none;
   opacity: 0;
 }
+
+@keyframes editTile {
+  // 0% {
+  //   transform: rotate(0deg)
+  // }
+  25% {
+    transform: rotate(3deg)
+  }
+
+  // 50% {
+  //   transform: rotate(0deg)
+  // }
+
+  75% {
+    transform: rotate(-3deg)
+  }
+
+  // 100% {
+  //   transform: rotate(0deg)
+  // }
+
+  // from {
+  //   transform: rotate(5deg)
+  // }
+
+  // to {
+  //   transform: rotate(-5deg)
+  // }
+}

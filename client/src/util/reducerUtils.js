@@ -138,9 +138,22 @@ const deleteChoreToFamilyData = (family, payload) => {
   return family.familyData;
 }
 
+const updateScheduleToFamilyData = (family, payload) => {
+  let filtered = family.familyData.schedules.filter(s=>{
+    if(s.child_id===payload.newSchedule.child_id) {
+      return false;
+    }
+    return true
+  })
+  filtered.push(payload.newSchedule)
+  family.familyData.schedules=filtered;
+  return family.familyData;
+}
+
 export default {
   addPersonToFamilyData,
   addChoreToFamilyData,
   editChoreToFamilyData,
-  deleteChoreToFamilyData
+  deleteChoreToFamilyData,
+  updateScheduleToFamilyData
 }
