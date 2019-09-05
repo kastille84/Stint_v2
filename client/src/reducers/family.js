@@ -88,7 +88,17 @@ const family = (state=initialState, action) => {
     case SET_IS_FAM_AUTH:
       return {
         ...state,
-        isFamAuth: true
+        isFamAuth: action.auth
+      }
+    case SET_IS_PARENT_AUTH:
+      return {
+        ...state,
+        isParentAuth: action.auth
+      }
+    case SET_IS_CHILD_AUTH:
+      return {
+        ...state,
+        isChildAth: action.auth
       }
     case SET_SELECTED_CHILD:
       return {

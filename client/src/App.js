@@ -17,14 +17,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setIsFamAuth: () => {
-    dispatch({ type: SET_IS_FAM_AUTH });
+  setIsFamAuth: (auth) => {
+    dispatch({ type: SET_IS_FAM_AUTH, auth });
   },
-  setIsParentAuth: () => {
-    dispatch({ type: SET_IS_PARENT_AUTH });
+  setIsParentAuth: (auth) => {
+    dispatch({ type: SET_IS_PARENT_AUTH, auth });
   },
-  setIsChildAuth: () => {
-    dispatch({ type: SET_IS_CHILD_AUTH });
+  setIsChildAuth: (auth) => {
+    dispatch({ type: SET_IS_CHILD_AUTH, auth });
   }
 });
 
@@ -34,10 +34,10 @@ export class UnconnectedApp extends Component {
     loaded: false
   };
   componentDidMount() {
-    window.addEventListener("load", () => {
-      this.setState({ loading: false });
-      setTimeout(() => this.setState({ loaded: true }), 500);
-    });
+    // window.addEventListener("load", () => {
+    //   this.setState({ loading: false });
+    //   setTimeout(() => this.setState({ loaded: true }), 500);
+    // });
 
     this._checkJWT();
   }
@@ -53,14 +53,14 @@ export class UnconnectedApp extends Component {
       //check family_jwt
       if (localStorage.getItem("family_jwt")) {
         //set isFamAuth
-        this.props.setIsFamAuth();
+        this.props.setIsFamAuth(true);
         //check parent_jwt
         if (localStorage.getItem("parent_jwt")) {
-          this.props.setIsParentAuth();
+          this.props.setIsParentAuth(true);
         }
         //check child_jwt
         if (localStorage.getItem("child_jwt")) {
-          this.props.setIsChildAuth();
+          this.props.setIsChildAuth(true);
         }
       }
     }
@@ -72,15 +72,7 @@ export class UnconnectedApp extends Component {
       <div className="App">
         <Nav />
         <div className="container">
-          {!loaded ? (
-            <Loader
-              type="Grid"
-              color="#2e40dc"
-              height={80}
-              width={80}
-            />
-          ) : null}
-          <Router />
+          <Router family={this.props.family} />
         </div>
       </div>
     );
@@ -91,3 +83,11 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(UnconnectedApp);
+          // {!loaded ? (
+          //   <Loader
+          //     type="Grid"
+          //     color="#2e40dc"
+          //     height={80}
+          //     width={80}
+          //   />
+          // ) : null}

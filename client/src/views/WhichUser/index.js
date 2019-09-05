@@ -17,6 +17,8 @@ import AddParent from './components/AddParent';
 import AddChild from './components/AddChild';
 import PersonBox from './components/PersonBox';
 
+import {protectRoutes} from '../../util/utils';
+
 const mapStateToProps = state => ({
   familyData: state.family.familyData,
   whichUserForm: state.form.which_user,
@@ -88,7 +90,13 @@ class WhichUser extends Component {
     selectedBox: null
   }
 
+  componentWillMount() {
+    //protect route
+    protectRoutes('whichUser', this.props.history.goBack)
+
+  }
   componentDidMount() {
+
     if(!this.props.familyData || !this.props.user.userData) {
       this.props.getFamilyData()
     }

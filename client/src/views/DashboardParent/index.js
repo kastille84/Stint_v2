@@ -11,6 +11,7 @@ import {
   SET_PERSON_DATA_DONE
 } from '../../constants';
 
+
 import Chores from '../../components/Chores';
 import ChoreChart from '../../components/ChoreChart';
 
@@ -43,11 +44,13 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 class DashboardParent extends Component {
+  componentWillMount() {
+    //protect route
+    protectRoutes('parent', this.props.history.goBack)
+
+  }
   componentDidMount() {
-    //redirect if not loggedin
-    protectRoutes('parent', (route)=> {
-      this.props.history.push(route);
-    })
+
     //on refresh of page, get family and parent info
     if (!(this.props.family||{}).familyData) {
       this.props.getFamilyData();

@@ -41,11 +41,13 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 class DashboardChild extends Component {
+  componentWillMount() {
+    //protect route
+    protectRoutes('child', this.props.history.goBack)
+
+  }
   componentDidMount() {
-    //redirect if not loggedin
-    protectRoutes('child', (route)=> {
-      this.props.history.push(route);
-    })
+
     //on refresh of page, get family and parent info
     if (!(this.props.family||{}).familyData) {
       this.props.getFamilyData();
