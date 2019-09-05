@@ -5,24 +5,6 @@ class AddChild extends Component {
     display: null
   };
 
-  // _changeSideToDisplay = side => {
-  //   this.setState({ display: side });
-  // };
-  // _toggleSide = () => {
-  //   switch (this.state.display) {
-  //     case null:
-  //     case "front":
-  //       this.setState({ display: "back" });
-  //       return;
-  //     case "back":
-  //       this.setState({ display: "front" });
-  //       return;
-  //     default:
-  //       return;
-  //   }
-  // };
-
-
 
   render() {
     let display = this.state.display;

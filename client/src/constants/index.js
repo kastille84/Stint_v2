@@ -9,6 +9,7 @@ export const LOGIN_FAMILY = "LOGIN_FAMILY";
 export const LOGIN_FAMILY_DONE = "LOGIN_FAMILY_DONE";
 export const LOGIN_PERSON = "LOGIN_PERSON";
 export const LOGIN_PERSON_DONE = "LOGIN_PERSON_DONE";
+export const RESET_USER = "RESET_USER"
 
 export const SET_IS_FAM_AUTH = "SET_IS_FAM_AUTH";
 export const SET_IS_PARENT_AUTH = "SET_IS_PARENT_AUTH";

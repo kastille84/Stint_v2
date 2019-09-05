@@ -69,7 +69,7 @@ const family = (state=initialState, action) => {
       return {
         ...state,
         fetching: false,
-        familyData: action.payload.family,
+        familyData: action.payload? action.payload.family: null,
         apiError: action.error? action.error : null,
         isFamAuth: true
       }
@@ -82,7 +82,7 @@ const family = (state=initialState, action) => {
       return {
         ...state,
         fetching: false,
-        familyData: action.payload?action.payload.family:null,
+        familyData: action.payload?{...action.payload.family}:null,
         apiError: action.error? action.error : null,
       }
     case SET_IS_FAM_AUTH:
@@ -152,7 +152,14 @@ const family = (state=initialState, action) => {
 
 export default family;
 
-
+const findSelectedChildSchedule = ({selectedChild, familyData}, child_id=null) => {
+  let schedule = familyData.schedules.filter(s=> {
+    let childId = child_id? child_id: (selectedChild||{})._id;
+    if(s.child_id===childId) return true;
+    return false;
+  })
+  return schedule[0];
+}
 
 // const updatePersonToFamilyData = (family, payload) => {
 

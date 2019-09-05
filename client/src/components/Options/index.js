@@ -23,14 +23,22 @@ class Options extends Component {
   componentDidMount() {
     //set first child as default selected if none selected
     //dispatch call
-    if( (this.props.family||{}).familyData ){
+    if( (this.props.family||{}).familyData && !this.props.child_id ){
       this.props.setSelectedChild(this.props.family.familyData.children[0])
-    }
+    } 
+    else if( (this.props.family||{}).familyData && this.props.child_id ){
+      let foundChild = this.findChild(this.props.child_id);
+      this.props.setSelectedChild(foundChild);
+    } 
+
   }
   componentDidUpdate(prevProps) {
     //set first child as default selected if none selected
     //dispatch call
-    if( prevProps.family.familyData===null && this.props.family.familyData !==null ){
+    if (this.props.child_id && prevProps.family.familyData===null && this.props.family.familyData !==null) {
+      let foundChild = this.findChild(this.props.child_id);
+      this.props.setSelectedChild(foundChild);
+    } else  if( prevProps.family.familyData===null && this.props.family.familyData !==null ){
       this.props.setSelectedChild(this.props.family.familyData.children[0])
     }
   }
@@ -41,11 +49,16 @@ class Options extends Component {
 
   _handleChildSelect = (e) => {
     //find child in family based off id
-    let filteredChildren=this.props.family.familyData.children.filter(c=> {
-      if(c._id===e.target.value) return true;
-    })
+    let child = this.findChild(e.target.value)
     //dispatch call
-    this.props.setSelectedChild(filteredChildren[0])
+    this.props.setSelectedChild(child)
+  }
+
+  findChild = (id) => {
+    let filteredChildren=this.props.family.familyData.children.filter(c=> {
+      if(c._id===id) return true;
+    })
+    return filteredChildren[0];
   }
 
   render() {
@@ -55,21 +68,40 @@ class Options extends Component {
         <div >
           {/* Form Select goes here for switching between children */}
           <span>Child:</span>
-          <select
-            onChange={(e)=>this._handleChildSelect(e)}
-          >
-            {(((family||{}).familyData||{}).children||[]).map(c=> {
-              return (
-                <option 
-                  value={c._id} 
-                  selected={(family.selectedChild||{})._id===c._id && true}
-                  key={c._id}
-                >
-                  {c.name}
-                </option>
-              )
-            })}
-          </select>
+          {!this.props.child_id?
+            <select
+              onChange={(e)=>this._handleChildSelect(e)}
+            >
+              {(((family||{}).familyData||{}).children||[]).map(c=> {
+                return (
+                  <option 
+                    value={c._id} 
+                    selected={(family.selectedChild||{})._id===c._id && true}
+                    key={c._id}
+                  >
+                    {c.name}
+                  </option>
+                )
+              })}
+            </select>          
+            :
+            <select
+              onChange={(e)=>this._handleChildSelect(e)}
+            >
+              {(((family||{}).familyData||{}).children||[]).filter(c=>c._id===this.props.child_id).map(c=> {
+                return (
+                  <option 
+                    value={c._id} 
+                    selected={(family.selectedChild||{})._id===c._id && true}
+                    key={c._id}
+                  >
+                    {c.name}
+                  </option>
+                )
+              })}
+            </select>
+          }
+
           <Button color="primary" onClick={()=>this.toggle()}>Options</Button>
         </div>
 

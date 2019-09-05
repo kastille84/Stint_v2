@@ -2,7 +2,8 @@ import {
   LOGIN_PERSON,
   LOGIN_PERSON_DONE,
   SET_PERSON_DATA,
-  SET_PERSON_DATA_DONE
+  SET_PERSON_DATA_DONE,
+  RESET_USER
 } from '../constants'
 
 const initialState = {
@@ -21,6 +22,7 @@ const user = (state=initialState, action) => {
         fetching: true
       };
     case LOGIN_PERSON_DONE:
+
       return {
         ...state,
         fetching: false,
@@ -41,6 +43,8 @@ const user = (state=initialState, action) => {
         userData: action.payload? Object.keys(action.payload).includes('parent') ? action.payload.parent: action.payload.child: null,
         apiError: action.error? action.error : null
       }
+    case RESET_USER:
+      return {...initialState}
     default:
       return state;
   }

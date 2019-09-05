@@ -529,7 +529,7 @@ router.put('/save-schedule', (req, res) => {
   passInputValidation(req, res);
   
   //find schedule
-  Schedule.findOneAndUpdate({child_id: req.body.child_id}).exec()
+  Schedule.findOne({_id: req.body.schedule._id}).exec()
     .then(schedule=> {
       schedule.monday=req.body.schedule.monday;
       schedule.tuesday=req.body.schedule.tuesday;

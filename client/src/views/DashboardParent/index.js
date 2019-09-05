@@ -62,16 +62,16 @@ class DashboardParent extends Component {
         <div>Parent Dashboard</div>
         <div className="row mb40">
           {/*CHOREs */}
-          <Widget customClasses="col-md-6 ">
+          <Widget customClasses="col-md-5 ">
             <Chores />
           </Widget>
-          <Widget customClasses="col-md-5 offset-md-1">
+          <Widget customClasses="col-md-5 offset-md-2">
             <p>Rewards</p>
           </Widget>
         </div>
         <div className="row mb40">
           <Widget customClasses="col-md-12 ">
-            <ChoreChart />
+             {this.props.family.familyData && <ChoreChart />}
           </Widget>
         </div>
       </section>

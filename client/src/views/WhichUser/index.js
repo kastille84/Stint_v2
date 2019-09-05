@@ -8,7 +8,9 @@ import {
   SET_FAMILY_DATA,
   SET_FAMILY_DATA_DONE,
   LOGIN_PERSON,
-  LOGIN_PERSON_DONE
+  LOGIN_PERSON_DONE,
+  RESET_USER,
+  SET_SELECTED_CHILD
 } from "../../constants";
 import api from "../../api";
 import AddParent from './components/AddParent';
@@ -68,6 +70,12 @@ const mapDispatchToProps = (dispatch) => ({
   resetForm: () => {
     //clear form
     dispatch(reset('which_user'));
+  },
+  resetUser: () => {
+    dispatch({type: RESET_USER})
+  },
+  resetSelectedChild: () => {
+    dispatch({type: SET_SELECTED_CHILD, child: null})
   }
 })
 
@@ -84,6 +92,10 @@ class WhichUser extends Component {
     if(!this.props.familyData || !this.props.user.userData) {
       this.props.getFamilyData()
     }
+    //reset selected child
+    this.props.resetSelectedChild()
+    //reset user
+    this.props.resetUser();
   }
 
   handleSubmit = (values) => {

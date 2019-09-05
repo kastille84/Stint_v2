@@ -7,7 +7,9 @@ import {Alert} from 'reactstrap';
 
 import {
   SAVE_SCHEDULE,
-  SAVE_SCHEDULE_DONE
+  SAVE_SCHEDULE_DONE,
+  SET_FAMILY_DATA,
+  SET_FAMILY_DATA_DONE                
 } from '../../constants';
 import api from '../../api';
 
@@ -17,8 +19,7 @@ const mapStateToProps = state => ({
   familyData: state.family.familyData,
   fetching: state.family.fetching,
   selectedChild: state.family.selectedChild,
-  personType: state.user.personType,
-  //originalSchedules: state.family.familyData.schedules
+  personType: state.user.personType
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -34,6 +35,13 @@ const mapDispatchToProps = dispatch => ({
         cbVisible(true)
         cbEditMode()
       })
+  },
+  getFamilyData: () => {
+    dispatch({type: SET_FAMILY_DATA})
+    api.Family.getFam()
+      .then(payload => {
+        dispatch({type: SET_FAMILY_DATA_DONE, payload})
+      })
   }
 })
 
@@ -42,34 +50,35 @@ class ChoreChart extends Component {
   state ={
     isEditable: false,
     editMode: false,
-    schedule: [],
-    scheduleBeforeSave: null,
+    schedule: null,
     visible: false,
     errorMessage: null
   }
 
-  componentDidMount() {
-    //if( this.props.selectedChild) {
-      // console.log('****got called')
-      // this.setState({
-      //   schedule:this.findChildSchedule(this.props.selectedChild._id),
-      //   isEditable: this.props.personType==='parent'? true: false
-      // });
-    //}
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if( prevProps.selectedChild !== this.props.selectedChild) {
+  componentDidMount() { 
+    if(this.props.selectedChild) {
       this.setState({
         schedule:this.findChildSchedule(this.props.selectedChild._id),
         isEditable: this.props.personType==='parent'? true: false
       });
     }
-    // if(prevState.editMode !== this.state.editMode) {
-    //   this.setState({
-    //     scheduleBeforeSave: prevState.schedule
-    //   })
-    // }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if((prevProps.selectedChild||{})._id !== (this.props.selectedChild||{})._id) {
+      this.setState({
+        schedule:this.findChildSchedule(this.props.selectedChild._id),
+        isEditable: (this.props.personType==='parent'||this.props.personType==='child')? true: false
+      });
+    }
+    if( 
+        prevState.editMode===true && this.state.editMode === false
+      ) {
+      this.setState({
+        schedule:this.findChildSchedule(this.props.selectedChild._id),
+        isEditable: (this.props.personType==='parent'||this.props.personType==='child')? true: false
+      });
+    }
   }
 
   onDismissAlert = () => {
@@ -120,24 +129,11 @@ class ChoreChart extends Component {
         else return true;
       })
     }
-    let newSchedule = this.state.schedule;
+    let newSchedule = {...this.state.schedule};
     newSchedule[day]=copyOfDayArr;
     this.setState({
       schedule: newSchedule
     })
-  }
-
-  saveSchedule = () => {
-    this.props.saveSchedule(
-      this.props.selectedChild._id,
-      this.state.schedule,
-      ()=> {
-        this.setState({visible: true})
-      },
-      ()=> {
-        this.setEditMode(false)
-      }
-    )
   }
 
   renderAlert = (type) => {
@@ -152,7 +148,7 @@ class ChoreChart extends Component {
 
   determineTile = (day,chore) => {
     //find schedule
-    let schedule = this.state.schedule ||[];
+    let schedule = this.state.schedule ||{};
     if( schedule[day] && schedule[day].length>0) {
       //check if anything assigned matches our current chore
       let filtered = schedule[day].filter(choreObj => {
@@ -165,10 +161,12 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            currentSchedule={this.state.schedule}
+            currentSchedule={schedule}
             editable={this.state.isEditable}
             editMode={this.state.editMode}
             editChoreInSchedule={this.editChoreInSchedule}
+            personType={this.props.personType}
+            
           />
         )
       } else if (filtered.length >0 && filtered[0].completed===false) {
@@ -176,10 +174,11 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            currentSchedule={this.state.schedule}
+            currentSchedule={schedule}
             editable={this.state.isEditable}
             editMode={this.state.editMode}
             editChoreInSchedule={this.editChoreInSchedule}
+            personType={this.props.personType}
           />
           )
       } else {
@@ -188,10 +187,11 @@ class ChoreChart extends Component {
           <Tile
             day={day}
             chore={chore}
-            currentSchedule={this.state.schedule}
+            currentSchedule={schedule}
             editable={this.state.isEditable}
             editMode={this.state.editMode}
             editChoreInSchedule={this.editChoreInSchedule}
+            personType={this.props.personType}
           />
           )
       }
@@ -202,10 +202,11 @@ class ChoreChart extends Component {
         <Tile
           day={day}
           chore={chore}
-          currentSchedule={this.state.schedule}
+          currentSchedule={schedule}
           editable={this.state.isEditable}
           editMode={this.state.editMode}
           editChoreInSchedule={this.editChoreInSchedule}
+          personType={this.props.personType}
         />
         )
     }
@@ -213,17 +214,37 @@ class ChoreChart extends Component {
 
   setEditMode = (val) => {
     this.setState({
-      editMode: val,
-      scheduleBeforeSave: {...this.state.schedule}
-    })
+      editMode: val
+    })    
   }
+
+
+
+  saveSchedule = () => {
+    this.props.saveSchedule(
+      this.props.selectedChild._id,
+      this.state.schedule,
+      ()=> {
+        this.setState({visible: true})
+      },
+      ()=> {
+        this.setEditMode(false)
+      }
+    )
+  }
+
   renderEditButtons = () => {
     if(this.state.isEditable) {
       //isEditable means we are in Parent Dashboard
       if(this.state.editMode===false) {
         return (
           <div className="chore-chart-controls">
-            <button className="btn btn-success" onClick={()=>{this.setEditMode(true)}}>Edit</button>
+            <button 
+              className="btn btn-success" 
+              onClick={()=>{
+                this.setEditMode(true)
+              }}              
+            >Edit</button>
           </div>
         )
       } else {
@@ -232,16 +253,13 @@ class ChoreChart extends Component {
             <button 
               className="btn btn-primary" 
               onClick={()=>{
-                this.setEditMode(false)
                 this.saveSchedule()
               }}>Save</button>
             <button 
               className="btn btn-info" 
               onClick={()=>{
-                this.setState({
-                  editMode: false,
-                  schedule: this.state.scheduleBeforeSave
-                })
+                this.setEditMode(false)
+                this.props.getFamilyData()
               }}>Cancel</button>
           </div>
         )        
@@ -274,31 +292,31 @@ class ChoreChart extends Component {
                   <td>{c}</td>
                   {/*Mon*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('monday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('monday', c)}
                   </td>
                   {/*Tue*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('tuesday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('tuesday', c)}
                   </td>
                   {/*Wed*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('wednesday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('wednesday', c)}
                   </td>
                   {/*Thur*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('thursday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('thursday', c)}
                   </td>
                   {/*Fri*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('friday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('friday', c)}
                   </td>
                   {/*Sat*/}
                   <td className="tile-wrapper">
-                   {this.props.selectedChild && this.determineTile('saturday', c)}
+                   {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('saturday', c)}
                   </td>
                   {/*Sun*/}
                   <td className="tile-wrapper">
-                    {this.props.selectedChild && this.determineTile('sunday', c)}
+                    {(this.props.selectedChild && (Object.keys(this.state.schedule||[]).length>0)) && this.determineTile('sunday', c)}
                   </td>
 
                 </tr>
