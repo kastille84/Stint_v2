@@ -65,6 +65,7 @@ class ChoreChart extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    debugger;
     if((prevProps.selectedChild||{})._id !== (this.props.selectedChild||{})._id) {
       this.setState({
         schedule:this.findChildSchedule(this.props.selectedChild._id),
@@ -74,6 +75,12 @@ class ChoreChart extends Component {
     if( 
         prevState.editMode===true && this.state.editMode === false
       ) {
+      this.setState({
+        schedule:this.findChildSchedule(this.props.selectedChild._id),
+        isEditable: (this.props.personType==='parent'||this.props.personType==='child')? true: false
+      });
+    }
+    if(prevProps.fetching !== this.props.fetching && this.props.selectedChild && this.props.personType) {
       this.setState({
         schedule:this.findChildSchedule(this.props.selectedChild._id),
         isEditable: (this.props.personType==='parent'||this.props.personType==='child')? true: false
