@@ -150,10 +150,18 @@ const updateScheduleToFamilyData = (family, payload) => {
   return family.familyData;
 }
 
+//REWARD
+const addRewardToFamilyData = (family, payload) => {
+  let filteredRewards = family.familyData.rewards.filter(r=>r.child_id !==payload.reward.child_id)
+  family.familyData.rewards=[...filteredRewards,payload.reward];
+  return family.familyData;
+}
+
 export default {
   addPersonToFamilyData,
   addChoreToFamilyData,
   editChoreToFamilyData,
   deleteChoreToFamilyData,
-  updateScheduleToFamilyData
+  updateScheduleToFamilyData,
+  addRewardToFamilyData
 }

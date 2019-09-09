@@ -64,32 +64,3 @@ const schema = new Schema({
 })
 
 module.exports = mongoose.model("Schedule", schema);
-// monday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],
-// tuesday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],
-// wednesday: [{
-//   chore: String,
-//   completed: Boolean,
-//   default:null
-// }],
-// thursday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],
-// friday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],
-// saturday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],
-// sunday: [{
-//   chore: String,
-//   completed: Boolean,
-// }],

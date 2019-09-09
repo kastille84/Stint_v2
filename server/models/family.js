@@ -35,6 +35,12 @@ const schema = new Schema({
       ref: 'Schedule'
     }
   ],
+  rewards: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reward'
+    }
+  ],
   chorelist: [String]
 
 })

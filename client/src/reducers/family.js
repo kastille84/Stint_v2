@@ -18,7 +18,9 @@ import {
   DELETE_CHORE,
   DELETE_CHORE_DONE,
   SAVE_SCHEDULE,
-  SAVE_SCHEDULE_DONE
+  SAVE_SCHEDULE_DONE,
+  ADD_REWARD,
+  ADD_REWARD_DONE
 } from '../constants';
 import reducerUtils from '../util/reducerUtils';
 
@@ -29,6 +31,7 @@ const initialState = {
   familyData: null,
   selectedChild: null,
   fetching: false,
+  fetchingReward: false,
   apiError: null
 }
 
@@ -154,6 +157,18 @@ const family = (state=initialState, action) => {
         apiError: action.error? action.error: null,
         fetching: false
       }  
+      case ADD_REWARD:
+        return {
+          ...state,
+          fetchingReward: true
+        }
+      case ADD_REWARD_DONE:
+        return {
+          ...state,
+          familyData: action.payload? {...reducerUtils.addRewardToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+          apiError: action.error? action.error: null,
+          fetchingReward: false  
+        }
     default:
       return state;
   }
@@ -171,24 +186,4 @@ const findSelectedChildSchedule = ({selectedChild, familyData}, child_id=null) =
   return schedule[0];
 }
 
-// const updatePersonToFamilyData = (family, payload) => {
-
-//   if(payload.parent) {
-//     let filtered =family.familyData.parents.filter(p => {
-//       if (p._id !==payload.parent._id) return true;
-//     });
-
-//     family.familyData.parents=[...filtered, payload.parent]
-//   }
-
-//   if (payload.child) {
-//     let filtered =family.familyData.children.filter(c => {
-//       if (c._id !==payload.child._id) return true;
-//     });
-
-//     family.familyData.children=[...filtered, payload.children]
-//   }
-
-//   return family.familyData;
-// }
 

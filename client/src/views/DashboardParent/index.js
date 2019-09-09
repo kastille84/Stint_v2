@@ -14,6 +14,7 @@ import {
 
 import Chores from '../../components/Chores';
 import ChoreChart from '../../components/ChoreChart';
+import Reward from '../../components/Reward';
 
 
 const mapStateToProps = (state) => ({
@@ -69,7 +70,7 @@ class DashboardParent extends Component {
             <Chores />
           </Widget>
           <Widget customClasses="col-md-5 offset-md-2">
-            <p>Rewards</p>
+            <Reward />
           </Widget>
         </div>
         <div className="row mb40">
