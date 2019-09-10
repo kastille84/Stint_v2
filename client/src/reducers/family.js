@@ -20,7 +20,11 @@ import {
   SAVE_SCHEDULE,
   SAVE_SCHEDULE_DONE,
   ADD_REWARD,
-  ADD_REWARD_DONE
+  ADD_REWARD_DONE,
+  EDIT_REWARD,
+  EDIT_REWARD_DONE,
+  ADD_SUBTRACT_TO_REWARD_GOAL,
+  ADD_SUBTRACT_TO_REWARD_GOAL_DONE
 } from '../constants';
 import reducerUtils from '../util/reducerUtils';
 
@@ -166,6 +170,30 @@ const family = (state=initialState, action) => {
         return {
           ...state,
           familyData: action.payload? {...reducerUtils.addRewardToFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+          apiError: action.error? action.error: null,
+          fetchingReward: false  
+        }
+      case EDIT_REWARD:
+        return {
+          ...state,
+          fetchingReward: true
+        }
+      case EDIT_REWARD_DONE:
+        return {
+          ...state,
+          familyData: action.payload? {...reducerUtils.editRewardInFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
+          apiError: action.error? action.error: null,
+          fetchingReward: false  
+        }
+      case ADD_SUBTRACT_TO_REWARD_GOAL:
+        return {
+          ...state,
+          fetchingReward: true
+        }
+      case ADD_SUBTRACT_TO_REWARD_GOAL_DONE:
+        return {
+          ...state,
+          familyData: action.payload? {...reducerUtils.editRewardInFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
           apiError: action.error? action.error: null,
           fetchingReward: false  
         }

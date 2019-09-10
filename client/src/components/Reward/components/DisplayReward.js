@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
+import PropTypes from 'prop-types'
 
 class DisplayReward extends Component {
 
@@ -25,9 +26,13 @@ class DisplayReward extends Component {
   // }
   componentDidMount() {
     if((this.props.reward||{}).reward_name !=='') {
-      this.setState({reward_name: (this.props.reward||{}).reward_name})
+      this.setState({
+        reward_name: (this.props.reward||{}).reward_name,
+        reward_goal: (this.props.reward||{}).reward_goal
+      })
     }
   }
+  
 
   setShowInput = (bool) => {
     this.setState({showInput: bool})
@@ -86,8 +91,42 @@ class DisplayReward extends Component {
     }
   }
 
-  editReward = () => {
-    
+  editReward = (e) => {
+    e.preventDefault();
+    let passed =  true;
+    let {reward_goal, reward_name} = this.state;
+    console.log('reward goal', reward_goal)
+    //validate
+      //reward_goal
+        //cannot be empty
+        if(reward_name === '') {
+          this.setState({
+            visible: true,
+            errorMessage: 'Reward cannot be empty'
+          })
+          passed = false;
+        }
+      //reward_goal
+        //cannot be empty
+        if(!reward_goal) {
+          this.setState({
+            visible: true,
+            errorMessage: 'Reward Goal cannot be empty'
+          })
+          passed = false;
+        }
+
+    //make API call
+    if (passed) {
+      this.props.editReward(
+        {reward_name,
+          reward_goal
+        },
+        (visibleVal) => {
+          this.setState({visible: visibleVal})
+        },
+      )
+    }
   }
 
   onDismissAlert = () => {
@@ -144,6 +183,7 @@ class DisplayReward extends Component {
                 >Add</button>
               :
                 <button
+                  onClick={(e)=>this.editReward(e)}
                   type="submit"
                 >Edit</button>
             }
@@ -162,6 +202,12 @@ class DisplayReward extends Component {
       </div>
     )
   }
+}
+
+DisplayReward.propTypes = {
+  reward: PropTypes.object.isRequired,
+  addReward: PropTypes.func.isRequired,
+  editReward: PropTypes.func.isRequired
 }
 
 export default DisplayReward;

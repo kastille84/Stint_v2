@@ -694,5 +694,81 @@ router.put(
       })
   }
 );
+// Add-rewrad
+router.put(
+  "/edit-reward",
+  [
+    check("reward_name")
+      .exists()
+      .trim(),
+    check("reward_goal")
+      .exists()
+      .trim()
+      .isNumeric()
+  ],
+  (req, res) => {
+    checkJWT(req, res);
+    passInputValidation(req, res);
+
+    Reward.findOne({child_id: req.body.child_id}).exec()
+      .then(reward => {
+        reward.reward_name = req.body.reward_name,
+        reward.reward_goal = req.body.reward_goal,
+        reward.save((err, rewardDoc) => {
+          if(err){return res.status(500).json({error: err})}
+          return res.status(200).json({reward: rewardDoc})
+        })
+      })
+      .catch(err => {
+        return res.status(500).json({error: err})
+      })
+  }
+);
+
+// Add-rewrad
+router.put(
+  "/add-subtract-goal",
+  [
+    check("type")
+      .exists()
+      .trim(),
+    check("val")
+      .exists()
+      .isNumeric()
+  ],
+  (req, res) => {
+    checkJWT(req, res);
+    passInputValidation(req, res);
+
+    Reward.findOne({child_id: req.body.child_id}).exec()
+      .then(reward => {
+        if (req.body.type==='subtract') {
+          let num = reward.reward_currently - req.body.val;
+          if (num < 0) {
+            throw new Error('Cannot subtract. It results in negative value.')
+          }
+          reward.reward_currently = num;
+          //calculate percentage
+          reward.reward_status = (num / reward.reward_goal) * 100;            
+        } else if (req.body.type==='add') {
+          let num = reward.reward_currently + req.body.val;
+          if (num > reward.reward_goal) {
+            throw new Error('Cannot add. It results in value more than the goal.')
+          }
+          reward.reward_currently = num;
+          //calculate percentage
+          reward.reward_status = (num / reward.reward_goal) * 100; 
+        }
+
+        reward.save((err, rewardDoc) => {
+          if(err){return res.status(500).json({error: err})}
+          return res.status(200).json({reward: rewardDoc})
+        })
+      })
+      .catch(err => {
+        return res.status(500).json({error: err})
+      })
+  }
+);
 
 module.exports = router;
