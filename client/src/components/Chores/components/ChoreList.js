@@ -48,7 +48,7 @@ class ChoreList extends Component {
 
   render() {
     return(
-      <div className="chore-list" onMouseLeave={()=>this._setSelected({selected:null})}>
+      <div className="chore-list" >
         <p className="page-widget-title">List of Chores</p>
         {this.props.fetching===true? 
           <Loader

@@ -1,0 +1,62 @@
+.reward {
+
+  .display-reward {
+    p {
+      color: $primary-blue;
+    }
+    p:hover {
+      background: #efefef;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    form {
+
+      label {
+        display: block;
+      }
+      .form-group {
+        margin-bottom: 10px;
+        .reward-name-input {
+          width: 100%;
+        }
+        .reward-goal-input {
+          width: 25%;
+        }
+      }
+      .buttons-wrapper {
+        text-align: right;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .reward-goal {
+    .progress {
+      &.progress-complete {
+        .progress-bar {
+          background-color: green;
+        }
+      }
+    }
+    &__controls {
+      margin-top:20px;
+      display: flex;
+      justify-content: center;
+      &-sub{
+        flex:1;
+      }
+      &-add{
+        flex:1;
+      }
+      &-input{
+        flex:2;
+        input {
+          width: 80%;
+          margin: auto;
+          display: block;
+        }
+      }
+    }
+  }
+
+}

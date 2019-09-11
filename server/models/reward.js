@@ -28,4 +28,10 @@ const schema = new Schema({
   }
 });
 
+schema.post('findOne', function(result, next){
+  if(result === null) {
+    return next(new Error("Reward is not found for this child"))
+  }
+  next();
+})
 module.exports = mongoose.model('Reward', schema);

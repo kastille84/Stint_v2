@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 
 import ChoreChart from '../../components/ChoreChart';
+import Reward from '../../components/Reward';
 
 const mapStateToProps = (state) => ({
   family: state.family,
@@ -63,7 +64,7 @@ class DashboardChild extends Component {
         <div className="row mb40">
           {/*CHOREs */}
           <Widget customClasses="col-md-5">
-            <p>Rewards</p>
+            <Reward />
           </Widget>
         </div>
         <div className="row mb40">

@@ -145,6 +145,7 @@ class ChoreListItem extends Component {
               required
               maxLength="30"
               autoFocus
+              onBlur={()=>this.props.setSelected(null)}
             />
             <button className="btn btn-sm btn-success" type="button" onClick={this.handleEditSubmit}>Edit</button>
             <button className="btn btn-sm btn-danger" type="button" onClick={this.handleDeleteSubmit} >X</button>

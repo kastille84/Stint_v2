@@ -712,6 +712,7 @@ router.put(
 
     Reward.findOne({child_id: req.body.child_id}).exec()
       .then(reward => {
+        if(!reward){return res.status(500).send({error:"Could not find reward for this child"})}
         reward.reward_name = req.body.reward_name,
         reward.reward_goal = req.body.reward_goal,
         reward.save((err, rewardDoc) => {
@@ -720,12 +721,12 @@ router.put(
         })
       })
       .catch(err => {
-        return res.status(500).json({error: err})
+        return res.status(500).json({error: err.error})
       })
   }
 );
 
-// Add-rewrad
+// Add-subtract-rewrad -goal
 router.put(
   "/add-subtract-goal",
   [

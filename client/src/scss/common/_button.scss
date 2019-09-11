@@ -27,3 +27,8 @@
   color: $primary-blue;
   text-align: left;
 }
+
+.btn-secondary-no-outline {
+  background-color: transparent;
+  border:none;
+}

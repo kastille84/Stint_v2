@@ -18,7 +18,8 @@ import api from '../../api';
 const mapStateToProps = (state) => ({
   family: state.family,
   fetching: state.family.fetching,
-  fetchingReward: state.family.fetchingReward
+  fetchingReward: state.family.fetchingReward,
+  personType: state.user.personType
 })
 const mapDispatchToProps = (dispatch) => ({
   addReward: (child_id,reward, cbVisible) => {
@@ -112,12 +113,17 @@ class Reward extends Component {
                 reward={reward||{}}
                 addReward={this.addReward}
                 editReward={this.editReward}
+                personType={this.props.personType}
+                apiError={this.props.family.apiError}
                 //fetchingReward={this.props.fetchingReward}
               />
+              <hr />
               {reward.reward_name?
                 <RewardGoal
                   reward={reward||{}}
                   addSubtractGoal={this.addSubtractGoal}
+                  personType={this.props.personType}
+                  apiError={this.props.family.apiError}
                 />
                 :null
               }

@@ -35,13 +35,15 @@ class DisplayReward extends Component {
   
 
   setShowInput = (bool) => {
-    this.setState({showInput: bool})
+    if(this.props.personType !=='child') {
+      this.setState({showInput: bool})
+    }
   }
 
   displayRewardOrNoRewardMessage = () => {
     if ((this.props.reward||{}).reward_name !=='' && this.state.showInput===false) {
       return <p onClick={()=>this.setShowInput(true)}>{this.props.reward.reward_name}</p>
-    } else {
+    } else if ((this.props.reward||{}).reward_name ==='' && this.state.showInput===false) {
       return (
         <div>
           <p>There is no reward for this child. </p>
@@ -154,19 +156,20 @@ class DisplayReward extends Component {
     if (this.state.showInput) {
       return (
         <form>
-          <div>
+          <div className="form-group">
             {this.renderAlert()}
-            <label>Reward</label>
             <input 
+              className="reward-name-input"
               type="text"
               value={this.state.reward_name}
               onChange={(e)=>this.setState({reward_name: e.target.value})}
               required
             />          
           </div>
-          <div>
+          <div className="form-group">
             <label>Points to Reach Goal (default 10)</label>
             <input 
+              className="reward-goal-input"
               type="number"
               value={this.state.reward_goal}
               onChange={(e)=>this.setState({reward_goal: e.target.value})}
@@ -175,18 +178,27 @@ class DisplayReward extends Component {
               required
             />          
           </div>
-          <div>
+          <div className="buttons-wrapper">
             {this.props.reward.reward_name===''? 
                 <button 
                   onClick={(e)=>this.addReward(e)}
                   type="submit"
+                  className="btn btn-sm btn-primary"
                 >Add</button>
               :
                 <button
                   onClick={(e)=>this.editReward(e)}
                   type="submit"
+                  className="btn btn-sm btn-primary"
                 >Edit</button>
             }
+              <button
+                type="button"
+                onClick={(e)=>{
+                  this.setShowInput(false)
+                }}
+                className="btn btn-sm btn-secondary-no-outline"
+              >Cancel</button>
                      
           </div>
         </form>
@@ -196,9 +208,9 @@ class DisplayReward extends Component {
 
   render() {
     return (
-      <div>
+      <div className="display-reward">
         {this.displayRewardOrNoRewardMessage()}
-        {this.displayRewardInput()}
+        {this.props.personType !== 'child' && this.displayRewardInput()}
       </div>
     )
   }
@@ -207,7 +219,9 @@ class DisplayReward extends Component {
 DisplayReward.propTypes = {
   reward: PropTypes.object.isRequired,
   addReward: PropTypes.func.isRequired,
-  editReward: PropTypes.func.isRequired
+  editReward: PropTypes.func.isRequired,
+  personType: PropTypes.string,
+  apiError: PropTypes.object
 }
 
 export default DisplayReward;

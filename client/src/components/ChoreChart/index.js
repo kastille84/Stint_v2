@@ -65,7 +65,6 @@ class ChoreChart extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    debugger;
     if((prevProps.selectedChild||{})._id !== (this.props.selectedChild||{})._id) {
       this.setState({
         schedule:this.findChildSchedule(this.props.selectedChild._id),

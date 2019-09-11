@@ -4,7 +4,7 @@ import {Progress, Alert} from 'reactstrap';
 
 class RewardGoal extends Component {
   state = {
-    val:0,
+    val:null,
     visible: false,
     errorMessage: null
   }
@@ -65,22 +65,39 @@ class RewardGoal extends Component {
   render() {
     return (
       <section className="reward-goal">
+        <p className="page-widget-title">Progress of Reward</p>
         <div className="reward-goal__progress-wrapper">
           <div>{this.props.reward.reward_currently} of {this.props.reward.reward_goal}</div>
-          <Progress value={this.props.reward.reward_status.toFixed(2)} />
+          <Progress 
+            className={`${this.props.reward.reward_status===100? 'progress-complete': ''}`}
+            value={this.props.reward.reward_status.toFixed(2)} 
+          />
         </div>
-        <div className="reward-goal__controls">
-          {this.renderAlert()}
-          <div onClick={()=>this.setGoal('subtract')}>- Subtract</div>
-          <div>
-            <input 
-              type="number"
-              value={this.state.val}
-              onChange={(e)=>this.setState({val:e.target.value})}
-            />
+        {this.props.personType !=='child' &&
+        (
+          <div className="reward-goal__controls">
+            {this.renderAlert()}
+            <div 
+              onClick={()=>this.setGoal('subtract')}
+              className="reward-goal__controls-sub btn btn-sm btn-danger"
+              >Sub</div>
+            <div
+            className="reward-goal__controls-input"
+            >
+              <input 
+                type="number"
+                value={this.state.val}
+                onChange={(e)=>this.setState({val:e.target.value})}
+                placeholder="Number to Add/Subtract"
+              />
+            </div>
+            <div 
+              onClick={()=>this.setGoal('add')}
+              className="reward-goal__controls-add btn btn-sm btn-success"
+            >Add</div>
           </div>
-          <div onClick={()=>this.setGoal('add')}>+ Add</div>
-        </div>
+        )
+        }
       </section>
     )
   }
@@ -88,7 +105,9 @@ class RewardGoal extends Component {
 
 RewardGoal.propTypes = {
   reward: PropTypes.object.isRequired,
-  addSubtractGoal: PropTypes.func.isRequired
+  addSubtractGoal: PropTypes.func.isRequired,
+  personType: PropTypes.string,
+  apiError: PropTypes.object
 }
 
 export default RewardGoal;
