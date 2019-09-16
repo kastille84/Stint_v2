@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import {withRouter} from 'react-router-dom';
 import Loader from "react-loader-spinner";
 import Router from "./Router";
 import "./scss/app.scss";
@@ -28,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export class UnconnectedApp extends Component {
+export class App extends Component {
   state = {
     loading: true,
     loaded: false
@@ -71,7 +72,7 @@ export class UnconnectedApp extends Component {
     return (
       <div className="App">
         <Nav />
-        <div className="container">
+        <div className={`${this.props.location.pathname==='/'? "container-full":"container"}`}>
           <Router family={this.props.family} />
         </div>
       </div>
@@ -82,12 +83,4 @@ export class UnconnectedApp extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UnconnectedApp);
-          // {!loaded ? (
-          //   <Loader
-          //     type="Grid"
-          //     color="#2e40dc"
-          //     height={80}
-          //     width={80}
-          //   />
-          // ) : null}
+)(withRouter(App));

@@ -144,17 +144,15 @@ router.post(
           .exec()
           .then(fam => {
             fam.parents = [...fam.parents, personId];
-            fam.save((err, famDoc) => {
-              if (err) return res.status(500).json({error: err})
-              //send response
-              return res.status(200).json({
-                type: 'parent',
-                familyData: famDoc
-                //token: token
-              });
-            });
+            fam.save();
           })
           .catch();
+
+        //send response
+        return res.status(200).json({
+          parent: result
+          //token: token
+        });
       });
       //#TODO: SAVE PARENT ID IN FAMILY
     } else if (req.body.person_type === "child") {
@@ -200,12 +198,12 @@ router.post(
                 fam.children = [...fam.children, personId];
                 fam.schedules = [...fam.schedules, scheduleDoc._id];
                 fam.rewards = [...fam.rewards, rewardDoc._id];
-                fam.save( (err, famDoc) => {
-                  if (err) return res.status(500).json({error: err})
-                  return res.status(200).json({type: "child",familyData:famDoc})
-                });
+                fam.save();
               })
               .catch();
+            return res.status(200).json({
+              child: childDoc
+            });
           });
         });
       });
