@@ -51,7 +51,12 @@ class DashboardParent extends Component {
 
   }
   componentDidMount() {
-
+    //if no kids, cannot enter dashboard 
+    if((this.props.family.familyData) && ((this.props.family.familyData||{}).children).length === 0) {
+      //remove parent_jwt
+      localStorage.removeItem('parent_jwt');
+      this.props.history.goBack();
+    }
     //on refresh of page, get family and parent info
     if (!(this.props.family||{}).familyData) {
       this.props.getFamilyData();

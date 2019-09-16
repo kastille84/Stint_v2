@@ -25,7 +25,15 @@ class DisplayReward extends Component {
   //   }
   // }
   componentDidMount() {
-    if((this.props.reward||{}).reward_name !=='') {
+    if((this.props.reward||{}).reward_name && (this.props.reward||{}).reward_name !=='') {
+      this.setState({
+        reward_name: (this.props.reward||{}).reward_name,
+        reward_goal: (this.props.reward||{}).reward_goal
+      })
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if(Object.keys(prevProps.reward).length !== Object.keys(this.props.reward).length ) {
       this.setState({
         reward_name: (this.props.reward||{}).reward_name,
         reward_goal: (this.props.reward||{}).reward_goal
@@ -41,9 +49,10 @@ class DisplayReward extends Component {
   }
 
   displayRewardOrNoRewardMessage = () => {
-    if ((this.props.reward||{}).reward_name !=='' && this.state.showInput===false) {
+    //if ((this.props.reward||{}).reward_name !=='' && this.state.showInput===false) {
+    if (this.state.reward_name !=='' && this.state.showInput===false) {
       return <p onClick={()=>this.setShowInput(true)}>{this.props.reward.reward_name}</p>
-    } else if ((this.props.reward||{}).reward_name ==='' && this.state.showInput===false) {
+    } else if (this.state.reward_name ==='' && this.state.showInput===false) {
       return (
         <div>
           <p>There is no reward for this child. </p>
@@ -179,18 +188,18 @@ class DisplayReward extends Component {
             />          
           </div>
           <div className="buttons-wrapper">
-            {this.props.reward.reward_name===''? 
+            {this.state.reward_name===''? 
                 <button 
                   onClick={(e)=>this.addReward(e)}
                   type="submit"
                   className="btn btn-sm btn-primary"
-                >Add</button>
+                >Save</button>
               :
                 <button
                   onClick={(e)=>this.editReward(e)}
                   type="submit"
                   className="btn btn-sm btn-primary"
-                >Edit</button>
+                >Save</button>
             }
               <button
                 type="button"

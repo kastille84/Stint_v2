@@ -128,7 +128,19 @@ class Reward extends Component {
                 :null
               }
             </div> 
-            ):null
+            ):
+            (
+              <div> 
+                <DisplayReward 
+                  reward={reward||{}}
+                  addReward={this.addReward}
+                  editReward={this.editReward}
+                  personType={this.props.personType}
+                  apiError={this.props.family.apiError}
+                  //fetchingReward={this.props.fetchingReward}
+                />
+              </div>
+            )
           }
       </div>
     )

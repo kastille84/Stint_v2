@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
 import api from '../../api';
+import {haveJWTNotProtected} from '../../util/utils';
 import {
   LOGIN_FAMILY,
   LOGIN_FAMILY_DONE
@@ -36,6 +37,10 @@ export class FamilyLogin extends Component {
     showPass: false,
     visible: false,
     errorMessage: null
+  }
+
+  componentDidMount() {
+    haveJWTNotProtected(this.props.history.push)
   }
 
   onDismissAlert = () => {

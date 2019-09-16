@@ -144,15 +144,17 @@ router.post(
           .exec()
           .then(fam => {
             fam.parents = [...fam.parents, personId];
-            fam.save();
+            fam.save((err, famDoc) => {
+              if (err) return res.status(500).json({error: err})
+              //send response
+              return res.status(200).json({
+                type: 'parent',
+                familyData: famDoc
+                //token: token
+              });
+            });
           })
           .catch();
-
-        //send response
-        return res.status(200).json({
-          parent: result
-          //token: token
-        });
       });
       //#TODO: SAVE PARENT ID IN FAMILY
     } else if (req.body.person_type === "child") {
@@ -198,12 +200,12 @@ router.post(
                 fam.children = [...fam.children, personId];
                 fam.schedules = [...fam.schedules, scheduleDoc._id];
                 fam.rewards = [...fam.rewards, rewardDoc._id];
-                fam.save();
+                fam.save( (err, famDoc) => {
+                  if (err) return res.status(500).json({error: err})
+                  return res.status(200).json({type: "child",familyData:famDoc})
+                });
               })
               .catch();
-            return res.status(200).json({
-              child: childDoc
-            });
           });
         });
       });
@@ -424,9 +426,17 @@ router.post(
             if (err) {
               return res.status(500).json({ message: "Could not save chore" });
             }
-            return res
-              .status(200)
-              .json({ chore: req.body.chore, message: "Chore saved" });
+            Schedule.find({'family_id': family._id}).exec()
+              .then(scheds => {
+                return res
+                .status(200)
+                .json({ chore: req.body.chore, 
+                  schedules: scheds,
+                  message: "Chore saved" });
+              })
+              .catch(err => {
+                return res.status(500).json({error: err, message: "Could not save chore" });
+              });
           });
         }
       })

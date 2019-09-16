@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Field, reduxForm, Form, SubmissionError, reset } from 'redux-form';
 import {Alert} from 'reactstrap';
+import Loader from "react-loader-spinner";
 import { 
   REGISTER_PERSON,
   REGISTER_PERSON_DONE,
@@ -21,6 +22,7 @@ import {protectRoutes} from '../../util/utils';
 
 const mapStateToProps = state => ({
   familyData: state.family.familyData,
+  fetching: state.family.fetching,
   whichUserForm: state.form.which_user,
   user: state.user
 })
@@ -31,6 +33,16 @@ const mapDispatchToProps = (dispatch) => ({
     api.Family.registerPerson(data)
       .then(payload => {
         dispatch({type: REGISTER_PERSON_DONE, payload: payload});
+        //set familyData again to get latest family data
+        dispatch({type: SET_FAMILY_DATA})
+        api.Family.getFam()
+          .then(payload => {
+            dispatch({type: SET_FAMILY_DATA_DONE, payload: payload})
+          })
+          .catch(err => {
+            dispatch({type: SET_FAMILY_DATA_DONE, error: err})
+          })
+        
         //clear form
         dispatch(reset('which_user'));
       })
@@ -223,6 +235,14 @@ class WhichUser extends Component {
     return (
       <div className="which-user">
         <h1 className="page-title mt40">Who are you?</h1>
+        {this.props.fetching &&
+          <Loader 
+            type="Grid"
+            color="#2e40dc"
+            height={20}
+            width={20}
+          />        
+        }
         {this.props.family && this.renderAlert('danger')}
         <section className="which-user-container mt40">
           {/* PARENT */}

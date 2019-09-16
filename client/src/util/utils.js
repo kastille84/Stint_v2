@@ -36,5 +36,16 @@ export const protectRoutes = (type, cbGoBack) => {
     }
   }
 
+}
 
+export const haveJWTNotProtected = (cbPush) => {
+  let family_jwt = localStorage.getItem('family_jwt');
+  let parent_jwt = localStorage.getItem('parent_jwt');
+  let child_jwt = localStorage.getItem('child_jwt');
+  if (parent_jwt || child_jwt) {
+    localStorage.removeItem('parent_jwt');
+    localStorage.removeItem('child_jwt');
+
+    cbPush('/which-user')
+  }
 }

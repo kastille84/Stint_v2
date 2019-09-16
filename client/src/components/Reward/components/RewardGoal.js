@@ -44,10 +44,10 @@ class RewardGoal extends Component {
       });
       passed = false;
     }
-    if (this.state.val <0) {
+    if (this.state.val <1) {
       this.setState({
         visible: true,
-        errorMessage: "Value cannot be negative"
+        errorMessage: "Value cannot be less than 1"
       });
       passed = false;
     }

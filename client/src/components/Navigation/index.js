@@ -25,7 +25,7 @@ class Navigation extends Component {
 
   logoutFamily = () => {
     localStorage.removeItem('family_jwt');
-    this.props.history.push('/family_login');
+    this.props.history.push('/family-login');
   }
   logoutParent = () => {
     localStorage.removeItem('parent_jwt');

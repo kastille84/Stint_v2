@@ -10,6 +10,7 @@ const addPersonToFamilyData = (family, payload) => {
 
   if (payload.child) {
     family.familyData.children.push(payload.child)
+    
   }
 
   return family.familyData;
@@ -17,7 +18,8 @@ const addPersonToFamilyData = (family, payload) => {
 }
 
 const addChoreToFamilyData = (family, payload) => {
-  family.familyData.chorelist=[...family.familyData.chorelist,payload.chore]
+  family.familyData.chorelist=[...family.familyData.chorelist,payload.chore];
+  family.familyData.schedules=[...payload.schedules];
   return family.familyData;
 }
 const editChoreToFamilyData = (family, payload) => {
