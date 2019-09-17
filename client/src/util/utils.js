@@ -48,4 +48,7 @@ export const haveJWTNotProtected = (cbPush) => {
 
     cbPush('/which-user')
   }
+  if (family_jwt && !parent_jwt && !child_jwt) {
+    cbPush('/which-user')
+  }
 }

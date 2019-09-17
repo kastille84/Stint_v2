@@ -44,9 +44,11 @@
       justify-content: center;
       &-sub{
         flex:1;
+        cursor: pointer;
       }
       &-add{
         flex:1;
+        cursor: pointer;
       }
       &-input{
         flex:2;

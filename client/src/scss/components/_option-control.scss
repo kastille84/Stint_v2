@@ -1,0 +1,20 @@
+.option-control {
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+
+    &-child {
+      span {
+        margin-right: 10px;
+      }
+      select {
+        min-width: 100px;
+      }
+    }
+  }
+
+  &__dropdown {
+    text-align:right;
+  }
+}

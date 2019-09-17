@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import Navigation from '../../components/Navigation';
+import {haveJWTNotProtected} from '../../util/utils';
 
 class Home extends Component {
+  componentDidMount() {
+    haveJWTNotProtected(this.props.history.push)
+  }
 
   render() {
     return (

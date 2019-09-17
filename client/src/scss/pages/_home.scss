@@ -6,6 +6,7 @@
     width: 80%;
     font-weight: 400;
   }
+
   .jumbotron {
     background-image: url('../img/clothespin.jpg');
     background-size: cover;
@@ -53,6 +54,10 @@
     padding-left: 36px;
     padding-right: 36px;
     background-color: $background-for-text;
+
+    .page-h2:last-of-type {
+      margin-bottom: 0px;
+    }
   }
 
 }

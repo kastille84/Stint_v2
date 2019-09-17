@@ -64,57 +64,54 @@ class Options extends Component {
   render() {
     let {family} = this.props;
     return (
-      <section className="option-control mt40 mb40">
-        <div >
+      <section className="option-control mt40 mb20">
+        <div className="option-control__top">
           {/* Form Select goes here for switching between children */}
-          <span>Child:</span>
-          {!this.props.child_id?
-            <select
-              onChange={(e)=>this._handleChildSelect(e)}
-            >
-              {(((family||{}).familyData||{}).children||[]).map(c=> {
-                return (
-                  <option 
-                    value={c._id} 
-                    selected={(family.selectedChild||{})._id===c._id && true}
-                    key={c._id}
-                  >
-                    {c.name}
-                  </option>
-                )
-              })}
-            </select>          
-            :
-            <select
-              onChange={(e)=>this._handleChildSelect(e)}
-            >
-              {(((family||{}).familyData||{}).children||[]).filter(c=>c._id===this.props.child_id).map(c=> {
-                return (
-                  <option 
-                    value={c._id} 
-                    selected={(family.selectedChild||{})._id===c._id && true}
-                    key={c._id}
-                  >
-                    {c.name}
-                  </option>
-                )
-              })}
-            </select>
-          }
+          <div className="option-control__top-child">          
+            <span>Child:</span>
+            {!this.props.child_id?
+              <select
+                onChange={(e)=>this._handleChildSelect(e)}
+              >
+                {(((family||{}).familyData||{}).children||[]).map(c=> {
+                  return (
+                    <option 
+                      value={c._id} 
+                      selected={(family.selectedChild||{})._id===c._id && true}
+                      key={c._id}
+                    >
+                      {c.name}
+                    </option>
+                  )
+                })}
+              </select>          
+              :
+              <select
+                onChange={(e)=>this._handleChildSelect(e)}
+              >
+                {(((family||{}).familyData||{}).children||[]).filter(c=>c._id===this.props.child_id).map(c=> {
+                  return (
+                    <option 
+                      value={c._id} 
+                      selected={(family.selectedChild||{})._id===c._id && true}
+                      key={c._id}
+                    >
+                      {c.name}
+                    </option>
+                  )
+                })}
+              </select>
+            }
+          </div>
 
           <Button color="primary" onClick={()=>this.toggle()}>Options</Button>
         </div>
 
-        <div>
+        <div className="option-control__dropdown">
           <Collapse
             isOpen={this.state.collapse}
           >
-          <p>set rewards</p>
-          <p>edit rewards</p>
-          <p>view chore chart</p>
-          <p>edit chore chart</p>
-          <p>set chores</p>
-          <p>edit chores</p>
+          <p>Parent/Child Messaging coming soon...</p>
           </Collapse>
         </div>
       </section>
