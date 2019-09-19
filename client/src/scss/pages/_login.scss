@@ -7,5 +7,8 @@
 
   .login-form-wrapper {
     width: 500px;
+    @include respond(phone-big) {
+      width: 80%;
+    }
   }
 }

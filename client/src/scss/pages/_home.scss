@@ -1,6 +1,10 @@
 .home {
   .page-h1 {
     margin-top: 36px;
+    @include respond(phone-small) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
   .page-h2 {
     width: 80%;
@@ -30,9 +34,18 @@
   &__info-strip {
     display: flex;
     min-height: 400px;
+    @include respond(tablet) {
+      flex-direction: column;
+    }
+  }
+  &__info-strip-credentials {
+    min-height: 300px;
   }
   &__info-img {
     flex: 1;
+    @include respond(tablet) {
+      min-height: 300px;
+    }
   }
   &__info-img--clutter {
     background-image: url('../img/clutter-2.jpg');
@@ -44,6 +57,9 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: bottom;
+    @include respond(tablet) {
+      order: -1;
+    }
   }
   &__info-text{
     flex: 1;
@@ -54,9 +70,32 @@
     padding-left: 36px;
     padding-right: 36px;
     background-color: $background-for-text;
+    @include respond(tablet) {
+      margin-top: 36px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
 
     .page-h2:last-of-type {
       margin-bottom: 0px;
+    }
+
+    .btn-credentials {
+
+    }
+  }
+
+  &__info-text-credentials {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    span {
+      display: block;
+    }
+    span:nth-child(odd) {
+      font-weight: 500;
     }
   }
 

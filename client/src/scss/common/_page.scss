@@ -3,7 +3,11 @@
   font-size: $page-title;
   margin-bottom: 36px;
 }
-
+.page-subtitle {
+  text-align: center;
+  font-size: $page-subtitle;
+  margin-bottom: 36px;
+}
 .page-widget-title {
   font-weight: 500;
 }

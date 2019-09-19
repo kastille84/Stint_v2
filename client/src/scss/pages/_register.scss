@@ -7,6 +7,9 @@
 
   .register-form-wrapper {
     width: 500px;
+    @include respond(phone-big) {
+      width: 80%;
+    }
     .alert {
       top:-10px;
       left: 25%;

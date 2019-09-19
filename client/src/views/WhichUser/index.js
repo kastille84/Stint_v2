@@ -234,7 +234,8 @@ class WhichUser extends Component {
     let {handleSubmit} = this.props;
     return (
       <div className="which-user">
-        <h1 className="page-title mt40">Who are you?</h1>
+        <h1 className="page-title mt40">Welcome {(this.props.familyData||{}).family_nickname}!</h1>
+        <h2 className="page-subtitle ">Who are you?</h2>
         {this.props.fetching &&
           <Loader 
             type="Grid"

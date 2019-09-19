@@ -59,10 +59,10 @@ export class UnconnectedFamilyRegister extends Component {
     //validate values
 
     //password > 8 characters
-    if(values.family_password.length <= 8) {
+    if(values.family_password.length < 8) {
       this.setState({
         visible: true,
-        errorMessage: "Password should be more than 8 characters."
+        errorMessage: "Password should be 8 characters or more."
       })
       return;
     }

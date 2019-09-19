@@ -5,9 +5,17 @@
   .which-user-container {
     display: flex;
     justify-content: space-evenly;
+    @include respond(phone-big) {
+      flex-direction: column;
+    }
 
     .parent-side{
       flex: 1;
+      @include respond(phone-big) {
+        border-bottom: 1px solid $primary-blue;
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+      }
     }
     
     .children-side {
@@ -18,6 +26,10 @@
     .add-person {
       position: relative;
       width: 250px;
+      @include respond(tablet) {
+        width: 200px;
+        height: 200px;
+      }
       height: 220px;
       display: flex;
       flex-direction: column;
@@ -94,6 +106,10 @@
     .person-box {
       position: relative;
       width: 250px;
+      @include respond(tablet) {
+        width: 200px;
+        height: 200px;
+      }
       height: 220px;
       display: flex;
       flex-direction: column;
