@@ -6,7 +6,7 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const { dbUser, dbPass, tks } = require("../config/config");
+const { dbUser, dbPass, tks } = require("../config/config.js");
 //models
 const Family = require("../models/family");
 const Parent = require("../models/parent");
