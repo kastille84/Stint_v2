@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.92c29b52.chunk.css",
+    "main.js": "/static/js/main.f726631a.chunk.js",
+    "main.js.map": "/static/js/main.f726631a.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/css/2.8ba90912.chunk.css": "/static/css/2.8ba90912.chunk.css",
+    "static/js/2.dd221250.chunk.js": "/static/js/2.dd221250.chunk.js",
+    "static/js/2.dd221250.chunk.js.map": "/static/js/2.dd221250.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.de220a206caf14a92cadb80f8c6149be.js": "/precache-manifest.de220a206caf14a92cadb80f8c6149be.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.8ba90912.chunk.css.map": "/static/css/2.8ba90912.chunk.css.map",
+    "static/css/main.92c29b52.chunk.css.map": "/static/css/main.92c29b52.chunk.css.map",
+    "static/media/app.scss": "/static/media/clutter-2.0110ea6f.jpg"
+  }
+}
