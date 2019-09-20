@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
 
-const Widget = (props) => {
-
+const Widget = props => {
   return (
     <article className={`widget ${props.customClasses}`}>
-    {props.children}
+      {props.children}
     </article>
-  )
-}
+  );
+};
 
 export default Widget;

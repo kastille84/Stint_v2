@@ -1,34 +1,38 @@
-import agent from './agent';
+import agent from "./agent";
 
 export default {
-
   //CHORES
-  addChore: (data) => {
+  addChore: data => {
     return new global.Promise((resolve, reject) => {
-      agent.axios.post("/add-chore", {chore:data})
-      .then(res => {
-        return resolve(res.data)
-      })
-      .catch(err => reject(err));
-    })
+      agent.axios
+        .post("/add-chore", { chore: data })
+        .then(res => {
+          return resolve(res.data);
+        })
+        .catch(err => reject(err));
+    });
   },
-  editChore: (data) => {
+  editChore: data => {
     return new global.Promise((resolve, reject) => {
-      agent.axios.put('/edit-chore', {oldChore:data.oldChore, newChore:data.newChore})
-      .then(res => {
-        return resolve(res.data)
-      })
-      .catch(err=>reject(err));
-    })
+      agent.axios
+        .put("/edit-chore", {
+          oldChore: data.oldChore,
+          newChore: data.newChore
+        })
+        .then(res => {
+          return resolve(res.data);
+        })
+        .catch(err => reject(err));
+    });
   },
-  deleteChore: (data) => {
+  deleteChore: data => {
     return new global.Promise((resolve, reject) => {
-      agent.axios.delete(`/delete-chore/${data}`)
-      .then(res => {
-        return resolve(res.data)
-      })
-      .catch(err=>reject(err));
-    })    
+      agent.axios
+        .delete(`/delete-chore/${data}`)
+        .then(res => {
+          return resolve(res.data);
+        })
+        .catch(err => reject(err));
+    });
   }
-
-}
+};

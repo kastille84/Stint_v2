@@ -18,10 +18,8 @@ class Tile extends Component {
     rCompleted: null
   };
 
-  
-
   componentDidMount() {
-    if(this.props.currentSchedule) {
+    if (this.props.currentSchedule) {
       let completed = findCompletedStatus(
         this.props.day,
         this.props.chore,
@@ -49,10 +47,10 @@ class Tile extends Component {
         });
       }
     } else {
-        this.setState({
-          color: "white",
-          completed: null
-        });      
+      this.setState({
+        color: "white",
+        completed: null
+      });
     }
   }
 
@@ -92,10 +90,9 @@ class Tile extends Component {
     }
   }
 
-
   handleClick = () => {
     if (this.props.editable && this.props.editMode) {
-      if(this.props.personType==='parent') {
+      if (this.props.personType === "parent") {
         if (this.state.color === "red") {
           //call parent function to edit child's chore
           this.props.editChoreInSchedule({
@@ -106,7 +103,7 @@ class Tile extends Component {
           this.setState({
             color: "green",
             completed: true
-          }); 
+          });
         } else if (this.state.color === "green") {
           //call parent function to edit child's chore
           this.props.editChoreInSchedule({
@@ -117,7 +114,7 @@ class Tile extends Component {
           this.setState({
             color: "white",
             completed: null
-          }); 
+          });
         } else if (this.state.color === "white") {
           //call parent function to edit child's chore
           this.props.editChoreInSchedule({
@@ -128,10 +125,10 @@ class Tile extends Component {
           this.setState({
             color: "red",
             completed: false
-          }); 
+          });
         }
-      } else if (this.props.personType==='child') {
-        if(this.state.color === 'red') {
+      } else if (this.props.personType === "child") {
+        if (this.state.color === "red") {
           this.props.editChoreInSchedule({
             day: this.props.day,
             chore: this.props.chore,
@@ -140,8 +137,8 @@ class Tile extends Component {
           this.setState({
             color: "green",
             completed: true
-          }); 
-        } else if (this.state.color==='green') {
+          });
+        } else if (this.state.color === "green") {
           this.props.editChoreInSchedule({
             day: this.props.day,
             chore: this.props.chore,
@@ -150,7 +147,7 @@ class Tile extends Component {
           this.setState({
             color: "red",
             completed: false
-          }); 
+          });
         }
       }
     }

@@ -1,6 +1,7 @@
 .navbar {
   //min-height: 60px;
   background-color: $primary-blue; 
+  z-index: 3;
   
   &-brand {
     font-size: $page-md-text;
@@ -18,12 +19,17 @@
 
   .nav-item {
     font-size: $page-md-text;
+    span {
+      display: inline-block;
+      width: 100%;
+    }
   }
 
   .dropdown-toggle {
     color: $color-white !important;
-    @include respond(phone-big) {
+    @include respond(tablet) {
       text-align: right;
     }
   }
+
 }

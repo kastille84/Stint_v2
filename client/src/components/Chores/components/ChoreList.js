@@ -1,67 +1,59 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import Loader from "react-loader-spinner";
 import ChoreListItem from "./ChoreListItem";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   addChoreForm: state.form.addChore,
   familyData: state.family.familyData,
   fetching: state.family.fetching
 });
 
 class ChoreList extends Component {
-
   state = {
     selected: null
-  }
-  _setSelected = (chore) => {
-    this.setState({selected: chore})
-  }
-  _determineSelected = (chore) => {
-    if(chore === this.state.selected) {
+  };
+  _setSelected = chore => {
+    this.setState({ selected: chore });
+  };
+  _determineSelected = chore => {
+    if (chore === this.state.selected) {
       return true;
     }
     return false;
-  }
-  handleSubmit = (values) => {
-
-  }
-
+  };
+  handleSubmit = values => {};
 
   renderChoresList = () => {
-    if(((this.props.familyData||{}).chorelist||[]).length>0) {
-      return this.props.familyData.chorelist.map((c,idx)=> {
-        return (
-          <ChoreListItem 
-            chore={c} 
-            key={c}
-            selected={this._determineSelected(c)}
-            setSelected={this._setSelected}
-          />
+    if (((this.props.familyData || {}).chorelist || []).length > 0) {
+      return this.props.familyData.chorelist
+        .map((c, idx) => {
+          return (
+            <ChoreListItem
+              chore={c}
+              key={c}
+              selected={this._determineSelected(c)}
+              setSelected={this._setSelected}
+            />
           );
-      }).reverse();
+        })
+        .reverse();
+    } else if (((this.props.familyData || {}).chorelist || []).length === 0) {
+      return <p>No chores. Please add a chore above.</p>;
     }
-    else if (((this.props.familyData||{}).chorelist||[]).length ===0) {
-      return <p>No chores. Please add a chore above.</p>
-    }
-  }
+  };
 
   render() {
-    return(
-      <div className="chore-list" >
+    return (
+      <div className="chore-list">
         <p className="page-widget-title">List of Chores</p>
-        {this.props.fetching===true? 
-          <Loader
-            type="Grid"
-            color="#2e40dc"
-            height={20}
-            width={20}
-          />
-          :
+        {this.props.fetching === true ? (
+          <Loader type="Grid" color="#2e40dc" height={20} width={20} />
+        ) : (
           this.renderChoresList()
-        }
+        )}
       </div>
-    )
+    );
   }
 }
 
