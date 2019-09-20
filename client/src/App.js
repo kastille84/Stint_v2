@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {withRouter} from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import Router from "./Router";
 import "./scss/app.scss";
 import Nav from "./components/Navigation";
 
-import { 
-  SET_IS_FAM_AUTH ,
+import {
+  SET_IS_FAM_AUTH,
   SET_IS_PARENT_AUTH,
   SET_IS_CHILD_AUTH
 } from "./constants";
@@ -18,13 +18,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setIsFamAuth: (auth) => {
+  setIsFamAuth: auth => {
     dispatch({ type: SET_IS_FAM_AUTH, auth });
   },
-  setIsParentAuth: (auth) => {
+  setIsParentAuth: auth => {
     dispatch({ type: SET_IS_PARENT_AUTH, auth });
   },
-  setIsChildAuth: (auth) => {
+  setIsChildAuth: auth => {
     dispatch({ type: SET_IS_CHILD_AUTH, auth });
   }
 });
@@ -72,7 +72,13 @@ export class App extends Component {
     return (
       <div className="App">
         <Nav />
-        <div className={`${this.props.location.pathname==='/'? "container-full":"container"}`}>
+        <div
+          className={`${
+            this.props.location.pathname === "/"
+              ? "container-full"
+              : "container"
+          }`}
+        >
           <Router family={this.props.family} />
         </div>
       </div>

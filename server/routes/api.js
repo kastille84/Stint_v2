@@ -24,8 +24,14 @@ const options = {
   useNewUrlParser: true
 };
 
+let urlMongo;
+if(process.env.NODE_ENV === "production") {
+  urlMongo="mongodb://"+dbUser+":"+dbPass+"@ds345597.mlab.com:45597/stint_v2"
+} else {
+  urlMongo="mongodb://localhost:27017/stint_v2"
+}
 //mongoose.connect("mongodb://"+dbUser+":"+dbPass+"@ds345597.mlab.com:45597/stint_v2", options)
-mongoose.connect("mongodb://localhost:27017/stint_v2", options).then(
+mongoose.connect(urlMongo, options).then(
   () => {
     console.log("connected to mongoDB");
   },
