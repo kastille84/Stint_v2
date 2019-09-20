@@ -107,9 +107,9 @@ class Navigation extends Component {
     return (
       <div>
         <Navbar light expand="md">
-          <div className="container">
+          
             <NavbarBrand href="/">Stint v2</NavbarBrand>
-            <NavbarToggler onClick={this.toggle} />
+            <NavbarToggler onClick={()=>this.toggle()} />
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav inNavbar>
@@ -119,7 +119,7 @@ class Navigation extends Component {
                 </UncontrolledDropdown>
               </Nav>
             </Collapse>
-          </div>
+         
         </Navbar>
       </div>
     )

@@ -1,5 +1,5 @@
 .navbar {
-  height: 60px;
+  //min-height: 60px;
   background-color: $primary-blue; 
   
   &-brand {
@@ -9,6 +9,11 @@
 
   &-collapse {
     font-size: $page-md-text;
+    // @include respond(phone-big) {
+    //   display: inline-block !important;
+    //   flex-basis: unset;
+    //   flex-grow: unset;
+    // }
   }
 
   .nav-item {
@@ -17,5 +22,8 @@
 
   .dropdown-toggle {
     color: $color-white !important;
+    @include respond(phone-big) {
+      text-align: right;
+    }
   }
 }
