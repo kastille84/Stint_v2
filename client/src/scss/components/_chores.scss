@@ -43,13 +43,14 @@
           justify-content: space-between;
           input {
             padding-left: 10px;
-            flex:5;
+            //flex:5;
+            width: 100%;
             &::placeholder {
               padding-left: 10px;
             }
           }
           button {
-            flex: 1;
+            //flex: 1;
           }
         }
       }

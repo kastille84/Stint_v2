@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Collapse, Button} from 'reactstrap';
+import Loader from "react-loader-spinner";
+import {Alert} from 'reactstrap';
+import {withRouter} from 'react-router-dom';
 import {
-  SET_SELECTED_CHILD
+  SET_SELECTED_CHILD,
+  DELETE_CHORE_DONE,
+  DELETE_CHILD,
+  DELETE_CHILD_DONE,
+  RESET_USER
 } from '../../constants'
+import api from '../../api';
 
 const mapStatetoProps = (state) => ({
   family: state.family,
@@ -13,12 +21,28 @@ const mapStatetoProps = (state) => ({
 const mapDispatchToPros = (dispatch) => ({
   setSelectedChild: (child) => {
     dispatch({type: SET_SELECTED_CHILD, child: child});
+  },
+  deleteChild: (child_id, cbPush, cbVisible) => {
+    dispatch({type: DELETE_CHILD})
+    api.Family.deleteChild(child_id)
+      .then(payload => {
+        dispatch({type: DELETE_CHILD_DONE, payload})
+        dispatch({type: RESET_USER});
+        //if successfule deletion, then redirect to whichUser
+        cbPush()
+      })
+      .catch(err=> {
+        dispatch({type: DELETE_CHILD_DONE, error: err})
+        cbVisible()
+      })
   }
 })
 
 class Options extends Component {
   state = {
-    collapse: false
+    collapse: false,
+    visible: false,
+    errorMessage: null
   }
   componentDidMount() {
     //set first child as default selected if none selected
@@ -43,6 +67,10 @@ class Options extends Component {
     }
   }
 
+  onDismissAlert = () => {
+    this.setState({visible: false, errorMessage:null})
+  }
+
   toggle() {
     this.setState({ collapse: !this.state.collapse });
   }
@@ -61,8 +89,18 @@ class Options extends Component {
     return filteredChildren[0];
   }
 
+  renderAlert = (type) => {
+    if (this.state.errorMessage) {
+      return (
+        <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismissAlert}>
+          {this.state.errorMessage}
+        </Alert>
+      )
+    }
+  }
+
   render() {
-    let {family} = this.props;
+    let {family, user} = this.props;
     return (
       <section className="option-control mt40 mb20">
         <div className="option-control__top">
@@ -112,6 +150,37 @@ class Options extends Component {
             isOpen={this.state.collapse}
           >
           <p>Parent/Child Messaging coming soon...</p>
+          <p>
+            {(user.personType==='parent') && (family||{}).fetchingDeleteChild===true &&
+              <Loader
+                type="Grid"
+                color="#2e40dc"
+                height={20}
+                width={20}
+              />
+            }
+            {(user.personType==='parent') && (family||{}).fetchingDeleteChild===false &&           
+              <button 
+                className="btn btn-danger"
+                onClick={()=>{
+                  this.props.deleteChild((
+                    family.selectedChild||{})._id,
+                    ()=> {
+                      localStorage.removeItem('parent_jwt');
+                      this.props.history.push('/which-user')
+                    },
+                    (visibleVal) => {
+                      this.setState({
+                        visible: visibleVal,
+                        message: "Could not delete child. Try again later."
+                      })
+                    },
+                  )
+                }}
+                >Delete {(family.selectedChild||{}).name} 
+            </button>
+            }
+          </p>
           </Collapse>
         </div>
       </section>
@@ -120,4 +189,4 @@ class Options extends Component {
   }
 }
 
-export default connect(mapStatetoProps, mapDispatchToPros)(Options);
+export default connect(mapStatetoProps, mapDispatchToPros)(withRouter(Options));

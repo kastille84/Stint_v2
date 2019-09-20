@@ -780,4 +780,56 @@ router.put(
   }
 );
 
+//delete a child
+router.delete('/delete-child/:child_id', (req, res) => {
+  checkJWT(req, res);
+  passInputValidation(req, res);
+
+  //reward
+  Reward.findOneAndDelete({child_id: req.params.child_id}).exec()
+    .then(reward => {
+      //schedule
+      Schedule.findOneAndDelete({child_id: req.params.child_id}).exec()
+        .then(schedule => {
+          //child
+          Child.findOneAndDelete({_id: req.params.child_id}).exec()
+            .then(child => {
+              //family data child_id
+              let reqToken = req.headers.authorization;
+              let decodedJWT = jwt.verify(reqToken, tks);
+              Family.findOne({ _id: decodedJWT.id })
+                .exec()
+                .then(famDoc => {
+                  //remove child id from it
+                  famDoc.children= famDoc.children.filter(c=>c !==req.params.child_id)
+                  famDoc.save((err, doc)=> {
+                    if (err) {
+                      return res
+                      .status(500)
+                      .json({ message: "Could not save family data" }); 
+                    }
+                    return res.status(200).json({
+                      family: doc
+                    });
+                  })
+                })
+                .catch(err => {
+                  return res
+                    .status(500)
+                    .json({ message: "Could not retrieve family data" });
+                });
+            })
+            .catch(err=> {
+              return res.status(500).json({error: err})
+            })
+        })
+        .catch(err=> {
+          return res.status(500).json({error: err})
+        })
+    })
+    .catch(err=> {
+      return res.status(500).json({error: err})
+    })
+})
+
 module.exports = router;

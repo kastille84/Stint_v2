@@ -24,7 +24,9 @@ import {
   EDIT_REWARD,
   EDIT_REWARD_DONE,
   ADD_SUBTRACT_TO_REWARD_GOAL,
-  ADD_SUBTRACT_TO_REWARD_GOAL_DONE
+  ADD_SUBTRACT_TO_REWARD_GOAL_DONE,
+  DELETE_CHILD,
+  DELETE_CHILD_DONE
 } from '../constants';
 import reducerUtils from '../util/reducerUtils';
 
@@ -36,6 +38,7 @@ const initialState = {
   selectedChild: null,
   fetching: false,
   fetchingReward: false,
+  fetchingDeleteChild: false,
   apiError: null
 }
 
@@ -196,6 +199,17 @@ const family = (state=initialState, action) => {
           familyData: action.payload? {...reducerUtils.editRewardInFamilyData({familyData:state.familyData},action.payload)} : state.familyData,
           apiError: action.error? action.error: null,
           fetchingReward: false  
+        }
+      case DELETE_CHILD:
+        return {
+          ...state,
+          fetchingDeleteChild: true
+        }
+      case DELETE_CHILD_DONE:
+        return {
+          ...state,
+          fetchingDeleteChild: false,
+          apiError: action.error? action.error: null
         }
     default:
       return state;

@@ -60,5 +60,14 @@ export default {
       .catch(err => reject(err));
     })
   },
+  deleteChild: (child_id) => {
+    return new global.Promise((resolve, reject) => {
+      agent.axios.delete(`/delete-child/${child_id}`)
+        .then(res => {
+          return resolve(res.data)
+        })
+        .catch(err => reject(err))
+    })
+  }
   
 }

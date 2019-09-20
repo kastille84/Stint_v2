@@ -68,7 +68,7 @@ class DashboardParent extends Component {
     return (
       <section className="dashboard-parent">
         <Options />
-        <div>{((this.props.user||{}).userData||{}).name? `${this.props.user.userData.name}'s Dashboard`:null}</div>        <div className="row mb40">
+        <div>{((this.props.user||{}).userData||{}).name? `${this.props.user.userData.name}'s Dashboard`:null}</div>        <div className="row">
           {/*CHOREs */}
           <Widget customClasses="col-md-5 ">
             <Chores />
@@ -77,7 +77,7 @@ class DashboardParent extends Component {
             <Reward />
           </Widget>
         </div>
-        <div className="row mb40">
+        <div className="row mt40 mb40">
           <Widget customClasses="col-md-12 ">
              {this.props.family.familyData && <ChoreChart />}
           </Widget>
