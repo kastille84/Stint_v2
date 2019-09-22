@@ -59,7 +59,7 @@ class Home extends Component {
             >
               Login
             </Link>
-            <p className="mt20">Using these credentials, create your own!</p>
+            <p className="mt20">Using these credentials or <br /><Link to="/family-register">Register</Link> to create your own!</p>
           </div>
           <div className="home__info-text-credentials">
             <p>
