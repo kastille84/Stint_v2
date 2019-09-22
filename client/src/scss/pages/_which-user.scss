@@ -102,6 +102,12 @@
     .parent-list {
        display:flex;
        flex-direction: column;
+
+       &__no-child {
+        width: 250px;
+        margin: auto;
+        text-align: center;
+       }
     }
     .person-box {
       position: relative;

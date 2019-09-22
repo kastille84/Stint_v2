@@ -360,10 +360,13 @@ class WhichUser extends Component {
             </AddChild>
             {/* List of Children*/}
             <div className="parent-list mt20">
-              {((this.props.familyData || {}).parents || []).length > 0 ?
+              {((this.props.familyData || {}).parents || []).length > 0 &&
                 this._renderPersonBox("children")
-                :
-                <p>No Children. Please Add a child above before Logging into a parent dashboard.</p>
+              }
+              {
+                ((this.props.familyData || {}).parents ||[]).length > 0  &&
+                ((this.props.familyData || {}).children ||[]).length === 0  &&
+                <p className="parent-list__no-child">No Children. Please Add a child above before Logging into a parent dashboard.</p>               
               }
             </div>
           </article>

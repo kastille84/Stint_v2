@@ -64,7 +64,8 @@ class ChoreListItem extends Component {
     this.setState({ visible: false });
   };
 
-  handleEditSubmit = () => {
+  handleEditSubmit = (e) => {
+    e.preventDefault();
     //validate
     let valPass = true;
     //validate
@@ -99,7 +100,8 @@ class ChoreListItem extends Component {
     }
   };
 
-  handleDeleteSubmit = () => {
+  handleDeleteSubmit = (e) => {
+    e.preventDefault();
     this.props.deleteChore(this.props.chore, visibleVal => {
       this.setState({ visible: visibleVal });
     });
@@ -136,8 +138,11 @@ class ChoreListItem extends Component {
 
   renderEditForm = () => {
     return (
-      <form className="chore-list-item__form">
-        <section className="form__form-group">
+      <form 
+        className="chore-list-item__form"
+      >
+        <section 
+          className="form__form-group">
           {this.renderAlert()}
           <div className="form__form-group-field">
             <input
@@ -148,19 +153,20 @@ class ChoreListItem extends Component {
               required
               maxLength="30"
               autoFocus
-              onBlur={() => this.props.setSelected(null)}
             />
             <button
               className="btn btn-sm btn-success"
-              type="button"
-              onClick={this.handleEditSubmit}
+              type="submit"
+              onClick={(e)=>{
+                this.handleEditSubmit(e)
+              }}
             >
               Edit
             </button>
             <button
               className="btn btn-sm btn-danger"
-              type="button"
-              onClick={this.handleDeleteSubmit}
+              type="submit"
+              onClick={(e)=>this.handleDeleteSubmit(e)}
             >
               X
             </button>
@@ -174,7 +180,10 @@ class ChoreListItem extends Component {
     return (
       <div
         className="chore-list-item"
-        onClick={() => this.props.setSelected(this.props.chore)}
+        onClick={() => this.props.setSelected(this.props.chore)}        
+        onMouseLeave={() => {
+          this.props.setSelected(null)
+        }}
       >
         {this.props.selected ? (
           this.renderEditForm()
