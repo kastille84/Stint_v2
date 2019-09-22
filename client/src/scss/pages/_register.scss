@@ -19,10 +19,10 @@
     @include respond(phone-big) {
       width: 80%;
     }
-    .alert {
-      top:-10px;
-      left: 25%;
-    }
+    // .alert {
+    //   top:-10px;
+    //   left: 25%;
+    // }
   }
   .password-show {
     cursor: pointer;

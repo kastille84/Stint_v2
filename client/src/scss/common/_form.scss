@@ -23,7 +23,9 @@
       width: 60%;
       margin: auto;
       margin-bottom: 30px;
-
+      @include respond(phone-big) {
+        width: 100%;
+      }
       &-label {
         font-size: $page-lg-text;
         @include respond(tablet) {
