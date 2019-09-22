@@ -4,6 +4,15 @@
   left:50%;
   transform: translate(-50%, -50%);
   width: 100%;
+  
+  @include respond(tablet) {
+    position: unset;
+    top: unset;
+    left: unset;
+    transform: unset;
+    margin-top: 60px;
+    margin-bottom: 40px;
+  }
 
   .login-form-wrapper {
     width: 500px;
