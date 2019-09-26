@@ -807,7 +807,9 @@ router.delete('/delete-child/:child_id', (req, res) => {
                 .exec()
                 .then(famDoc => {
                   //remove child id from it
-                  famDoc.children= famDoc.children.filter(c=>c !==req.params.child_id)
+                  famDoc.children= famDoc.children.filter(c=>c.toString() !==req.params.child_id)
+                  famDoc.schedules= famDoc.schedules.filter(s=>s.toString() !==schedule._id.toString())
+                  famDoc.rewards= famDoc.rewards.filter(r=>r.toString() !==reward._id.toString())
                   famDoc.save((err, doc)=> {
                     if (err) {
                       return res
